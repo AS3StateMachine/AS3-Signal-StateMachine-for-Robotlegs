@@ -1,14 +1,11 @@
 package org.osflash.statemachine.transitioning {
 import org.osflash.statemachine.base.*;
-import org.osflash.statemachine.base.BaseTransitionController;
-import org.osflash.statemachine.core.IState;
-import org.osflash.statemachine.core.ISignalState;
 import org.osflash.statemachine.core.ISignalFSMController;
-import org.robotlegs.utilities.statemachine.signalsfsm.SignalFSMController;
+import org.osflash.statemachine.core.IState;
+import org.osflash.statemachine.states.SignalState;
 
 public class SignalTransitionController extends BaseTransitionController {
 	private var _controller:ISignalFSMController;
-
 
 	public function SignalTransitionController( controller:ISignalFSMController = null ){
 		_controller = controller || new SignalFSMController();
@@ -18,7 +15,7 @@ public class SignalTransitionController extends BaseTransitionController {
 
 	public function get fsmController():ISignalFSMController{ return _controller; }
 
-	protected function get currentSignalState():ISignalState{ return ISignalState( currentState ); }
+	protected function get currentSignalState():SignalState{ return SignalState( currentState ); }
 
 	override protected function onTransition( target:IState, payload:Object ):void{
 
@@ -56,7 +53,6 @@ public class SignalTransitionController extends BaseTransitionController {
 
 	}
 
-
 	override protected function dispatchGeneralStateChanged():void{
 		// Notify the app generally that the state changed and what the new state is
 		_controller.dispatchChanged( currentState );
@@ -67,7 +63,6 @@ public class SignalTransitionController extends BaseTransitionController {
 		_controller = null;
 		super.destroy();
 	}
-
 
 }
 }

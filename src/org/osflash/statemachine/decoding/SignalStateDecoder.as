@@ -11,12 +11,12 @@ import org.robotlegs.core.ISignalCommandMap;
 
 public class SignalStateDecoder extends BaseXMLStateDecoder {
 	protected var classBagMap:Array;
-	private var _injector:IInjector;
-	private var _signalCommandMap:ISignalCommandMap;
+	protected var injector:IInjector;
+	protected var signalCommandMap:ISignalCommandMap;
 
 	public function SignalStateDecoder( fsm:XML, injector:IInjector, signalCommandMap:ISignalCommandMap ):void{
-		_injector = injector;
-		_signalCommandMap = signalCommandMap;
+		this.injector = injector;
+		this.signalCommandMap = signalCommandMap;
 		super( fsm );
 	}
 
@@ -28,9 +28,15 @@ public class SignalStateDecoder extends BaseXMLStateDecoder {
 		return state;
 	}
 
-	public function addCommandClass( commandClass:Class ):void{
+	public function addCommandClass( commandClass:Class ):Boolean{
 		if( classBagMap == null ) classBagMap = [];
+		if( hasClass( commandClass ) ) return false;
 		classBagMap.push( new ClassBag( commandClass ) );
+		return true;
+	}
+
+	public function hasClass( name:Object ):Boolean{
+		return ( getClass( name ) != null );
 	}
 
 	protected function getState( stateDef:Object ):IState{
@@ -55,7 +61,7 @@ public class SignalStateDecoder extends BaseXMLStateDecoder {
 		var cancelled:String = stateDef.@cancelled.toString();
 
 		if( inject )
-			_injector.mapValue( ISignalState, state, state.name );
+			injector.mapValue( ISignalState, state, state.name );
 
 		if( exitingGuard )
 			mapSignalCommand( ISignalState( state ).exitingGuard, exitingGuard );
@@ -74,7 +80,7 @@ public class SignalStateDecoder extends BaseXMLStateDecoder {
 
 	}
 
-	protected function getClassFromName( name:String ):Class{
+	protected function getClass( name:Object ):Class{
 		for each ( var cb:ClassBag in classBagMap ){
 			if( cb.equals( name ) ) return cb.payload;
 		}
@@ -82,9 +88,9 @@ public class SignalStateDecoder extends BaseXMLStateDecoder {
 	}
 
 	private function mapSignalCommand( signal:ISignal, commandClassName:String ):void{
-		var c:Class = getClassFromName( commandClassName );
+		var c:Class = getClass( commandClassName );
 		if( c == null )throw new UnregisteredSignalCommandError( commandClassName );
-		_signalCommandMap.mapSignal( signal, c );
+		signalCommandMap.mapSignal( signal, c );
 	}
 
 }
