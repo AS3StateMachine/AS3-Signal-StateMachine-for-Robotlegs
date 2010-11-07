@@ -9,9 +9,9 @@ import org.osflash.statemachine.signals.Changed;
 
 public class SignalFSMController implements ISignalFSMController {
 
-	private var _action:ISignal;
-	private var _cancel:ISignal;
-	private var _changed:ISignal;
+	protected var _action:ISignal;
+	protected var _cancel:ISignal;
+	protected var _changed:ISignal;
 
 	public function SignalFSMController(){
 		_action = new Action();
