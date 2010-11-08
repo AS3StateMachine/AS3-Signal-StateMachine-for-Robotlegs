@@ -1,11 +1,12 @@
 package org.osflash.statemachine.base {
 import flexunit.framework.Assert;
 
+import org.osflash.statemachine.core.IState;
+
 public class SignalFSMController_ChangedTest extends SignalFSMController {
 
-	private var _reason:String = "reason/test";
-	private var _testData:Object = {};
-	private var _hasCancelListenerBeenCalled:Boolean;
+	private var _testState:IState;
+	private var _hasChangedListenerBeenCalled:Boolean;
 
 	public function SignalFSMController_ChangedTest(){
 		super();
@@ -13,15 +14,29 @@ public class SignalFSMController_ChangedTest extends SignalFSMController {
 
 	[Test]
 	public function test():void{
-		addCancelListener( cancelListener );
-		cancel( _reason, _testData );
-		Assert.assertTrue( _hasCancelListenerBeenCalled );
+		_testState = new BaseState( "state/test" );
+		addChangedListener( changedListener );
+		dispatchChanged( _testState );
+		Assert.assertTrue( "First call: the actionLister method should have been called", _hasChangedListenerBeenCalled );
+
+		// reset and do again
+		_hasChangedListenerBeenCalled = false;
+		dispatchChanged( _testState );
+
+		Assert.assertTrue( "Second call: the actionLister method should have been called", _hasChangedListenerBeenCalled );
+
+		// reset, remove and do again
+		_hasChangedListenerBeenCalled = false;
+		removeChangedListener( changedListener );
+		dispatchChanged( _testState );
+
+		Assert.assertFalse( "Third call: the actionLister method should not have been called", _hasChangedListenerBeenCalled );
+
 	}
 
-	private function cancelListener( reason:String, payload:Object ):void{
-		_hasCancelListenerBeenCalled = true;
-		Assert.assertEquals( _reason, reason );
-		Assert.assertStrictlyEquals( _testData, payload );
+	private function changedListener( state:IState ):void{
+		_hasChangedListenerBeenCalled = true;
+		Assert.assertEquals( "The state parameter, should be the state dispatched", _testState, state );
 	}
 }
 }

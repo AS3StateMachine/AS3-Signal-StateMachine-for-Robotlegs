@@ -15,13 +15,18 @@ public class SignalFSMController_ActionTest extends SignalFSMController {
 	public function test():void{
 		addActionListener( actionListener );
 		action( _testAction, _testData );
-		Assert.assertTrue( _hasActionListenerBeenCalled );
+		Assert.assertTrue("First call: the actionLister method should have been called",  _hasActionListenerBeenCalled );
+
+		// reset switch, and call action again
+		_hasActionListenerBeenCalled = false;
+		action( _testAction, _testData );
+		Assert.assertTrue("Second call: the actionLister method should have been called",  _hasActionListenerBeenCalled );
 	}
 
 	private function actionListener( action:String, payload:Object ):void{
 		_hasActionListenerBeenCalled = true;
-		Assert.assertEquals( _testAction, action );
-		Assert.assertStrictlyEquals( _testData, payload );
+		Assert.assertEquals( "The action parameter, should be the action dispatched", _testAction, action );
+		Assert.assertStrictlyEquals( "The payload parameter, should be the payload dispatched",_testData, payload );
 	}
 }
 }
