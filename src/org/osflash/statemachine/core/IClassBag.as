@@ -5,6 +5,5 @@ package org.osflash.statemachine.core {
 		function get pkg():String;
 		function equals( value:Object ):Boolean
 		function destroy():void
-
 	}
 }
