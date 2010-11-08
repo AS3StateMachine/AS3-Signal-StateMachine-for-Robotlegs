@@ -6,9 +6,9 @@ import org.osflash.statemachine.supporting.MockInjector;
 import org.osflash.statemachine.supporting.MockSignalCommandMap;
 import org.osflash.statemachine.supporting.StateDefinitions;
 
-public class SignalStateDecoder_UnregisteredCommandTest extends SignalStateDecoder {
+public class SignalStateDecoder_UnregisteredCommandErrorTest extends SignalStateDecoder {
 
-	public function SignalStateDecoder_UnregisteredCommandTest(){
+	public function SignalStateDecoder_UnregisteredCommandErrorTest(){
 		super( null, new MockInjector(), new MockSignalCommandMap() );
 	}
 
