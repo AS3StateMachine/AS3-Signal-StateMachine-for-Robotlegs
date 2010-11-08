@@ -73,19 +73,19 @@ public class SignalStateDecoder extends BaseXMLStateDecoder {
 		if( inject )
 			injector.mapValue( ISignalState, state, state.name );
 
-		if( exitingGuard )
+		if( exitingGuard != "" )
 			mapSignalCommand( ISignalState( state ).exitingGuard, exitingGuard );
 
-		if( enteringGuard )
+		if( enteringGuard != "" )
 			mapSignalCommand( ISignalState( state ).enteringGuard, enteringGuard );
 
-		if( entered )
+		if( entered != "" )
 			mapSignalCommand( ISignalState( state ).entered, entered );
 
-		if( tearDown )
+		if( tearDown != "" )
 			mapSignalCommand( ISignalState( state ).tearDown, tearDown );
 
-		if( cancelled )
+		if( cancelled != "" )
 			mapSignalCommand( ISignalState( state ).cancelled, cancelled );
 
 	}
