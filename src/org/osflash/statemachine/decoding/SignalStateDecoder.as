@@ -28,6 +28,16 @@ public class SignalStateDecoder extends BaseXMLStateDecoder {
 		return state;
 	}
 
+	override public function destroy():void{
+		injector = null;
+		signalCommandMap = null;
+		for each ( var cb:ClassBag in classBagMap ){
+			cb.destroy();
+		}
+		classBagMap = null;
+		super.destroy();
+	}
+
 	public function addCommandClass( commandClass:Class ):Boolean{
 		if( classBagMap == null ) classBagMap = [];
 		if( hasClass( commandClass ) ) return false;
@@ -98,36 +108,50 @@ public class SignalStateDecoder extends BaseXMLStateDecoder {
 
 import flash.utils.describeType;
 
+import org.osflash.statemachine.core.IClassBag;
+
 /**
  * Wrapper class for a Class reference.
  */
-internal class ClassBag {
+internal class ClassBag implements IClassBag {
 
-	/**
-	 * the package of the wrapped Class
-	 */
-	public var pkg:String;
+	private var _pkg:String;
 
-	/**
-	 * the name of the wrapped Class
-	 */
-	public var name:String;
+	private var _name:String;
 
-	/**
-	 * the Class referance
-	 */
-	internal var payload:Class;
+	private var _payload:Class;
 
 	/**
 	 * @param c the Class to be wrapped
 	 */
 	public function ClassBag( c:Class ):void{
-		payload = c;
+		_payload = c;
 		describeClass( c );
 	}
 
+	/**
+	 * the name of the wrapped Class
+	 */
+	public function get name():String{
+		return _name;
+	}
+
+	/**
+	 * the Class reference
+	 */
+	public function get payload():Class{
+		return _payload;
+	}
+
+	/**
+	 * the package of the wrapped Class
+	 */
+	public function get pkg():String{
+		return _pkg;
+	}
+
 	public function toString():String{
-		return pkg + "." + name;
+		return _pkg + "." + _name;
 	}
 
 	/**
@@ -140,17 +164,22 @@ internal class ClassBag {
 	 *
 	 */
 	public function equals( value:Object ):Boolean{
-		return (( value.toString() == pkg + "." + name ) || ( value.toString() == pkg + "::" + name ) || ( value.toString() == name ) || ( value == payload )						    );
+		return (( value.toString() == _pkg + "." + _name ) ||
+				( value.toString() == _pkg + "::" + _name ) ||
+				( value.toString() == _name ) || 
+				( value == _payload )						    );
 	}
 
 	/**
 	 * Destroys the ClassBag
 	 */
 	public function destroy():void{
-		payload = null;
-		name = null;
-		pkg = null;
+		_payload = null;
+		_name = null;
+		_pkg = null;
 	}
+
+
 
 	/**
 	 * @private
@@ -158,7 +187,7 @@ internal class ClassBag {
 	private function describeClass( c:Class ):void{
 		var description:XML = describeType( c );
 		var split:Array = description.@name.toString().split( "::" );
-		pkg = String( split[0] );
-		name = String( split[1] );
+		_pkg = String( split[0] );
+		_name = String( split[1] );
 	}
 }
