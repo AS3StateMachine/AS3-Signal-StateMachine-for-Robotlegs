@@ -61,8 +61,10 @@ public class SignalStateDecoder extends BaseXMLStateDecoder {
 		}
 	}
 
+	// todo: need to write a test to make sure that undefined phases are not injected;
 	protected function injectState( state:IState, stateDef:Object ):void{
 
+		var signalState:ISignalState = ISignalState( state );
 		var inject:Boolean = ( stateDef.@inject.toString() == "true" );
 		var exitingGuard:String = stateDef.@exitingGuard.toString();
 		var enteringGuard:String = stateDef.@enteringGuard.toString();
@@ -74,19 +76,19 @@ public class SignalStateDecoder extends BaseXMLStateDecoder {
 			injector.mapValue( ISignalState, state, state.name );
 
 		if( exitingGuard != "" )
-			mapSignalCommand( ISignalState( state ).exitingGuard, exitingGuard );
+			mapSignalCommand( signalState.exitingGuard, exitingGuard );
 
 		if( enteringGuard != "" )
-			mapSignalCommand( ISignalState( state ).enteringGuard, enteringGuard );
+			mapSignalCommand( signalState.enteringGuard, enteringGuard );
 
 		if( entered != "" )
-			mapSignalCommand( ISignalState( state ).entered, entered );
+			mapSignalCommand( signalState.entered, entered );
 
 		if( tearDown != "" )
-			mapSignalCommand( ISignalState( state ).tearDown, tearDown );
+			mapSignalCommand( signalState.tearDown, tearDown );
 
 		if( cancelled != "" )
-			mapSignalCommand( ISignalState( state ).cancelled, cancelled );
+			mapSignalCommand( signalState.cancelled, cancelled );
 
 	}
 
