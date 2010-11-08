@@ -9,9 +9,9 @@ import org.osflash.statemachine.signals.Changed;
 
 public class SignalFSMController implements ISignalFSMController {
 
-	protected var _action:ISignal;
-	protected var _cancel:ISignal;
-	protected var _changed:ISignal;
+	protected var _action:Signal;
+	protected var _cancel:Signal;
+	protected var _changed:Signal;
 
 	public function SignalFSMController(){
 		_action = new Action();
@@ -20,11 +20,11 @@ public class SignalFSMController implements ISignalFSMController {
 	}
 
 	public function action( actionName:String, data:Object = null ):void{
-		Signal( _action ).dispatch( actionName, data );
+		 _action.dispatch( actionName, data );
 	}
 
 	public function cancel( reason:String, data:Object = null ):void{
-		Signal( _cancel ).dispatch( reason, data );
+		_cancel.dispatch( reason, data );
 	}
 
 	public function addChangedListener( handler:Function ):Function{
@@ -48,13 +48,13 @@ public class SignalFSMController implements ISignalFSMController {
 	}
 
 	public function dispatchChanged( state:IState ):void{
-		Signal( _changed ).dispatch( state );
+		_changed.dispatch( state );
 	}
 
 	public function destroy():void{
-		Signal( _action ).removeAll();
-		Signal( _cancel ).removeAll();
-		Signal( _changed ).removeAll();
+		_action.removeAll();
+		_cancel.removeAll();
+		_changed.removeAll();
 		_action = null;
 		_cancel = null;
 		_changed = null;
