@@ -20,11 +20,12 @@ public class SignalStateDecoder extends BaseXMLStateDecoder {
 		super( fsm );
 	}
 
-	override public function decodeState( stateDef:Object ):IState{
+	override public final function decodeState( stateDef:Object ):IState{
 		// Create State object
-		var state:IState = getState( stateDef );
+		var state:ISignalState = getState( stateDef );
 		decodeTransitions( state, stateDef );
 		injectState( state, stateDef );
+		mapSignals( state, stateDef );
 		return state;
 	}
 
@@ -49,7 +50,7 @@ public class SignalStateDecoder extends BaseXMLStateDecoder {
 		return ( getClass( name ) != null );
 	}
 
-	protected function getState( stateDef:Object ):IState{
+	protected function getState( stateDef:Object ):ISignalState{
 		return new SignalState( stateDef.@name.toString() );
 	}
 
@@ -61,19 +62,20 @@ public class SignalStateDecoder extends BaseXMLStateDecoder {
 		}
 	}
 
-	// todo: need to write a test to make sure that undefined phases are not injected;
 	protected function injectState( state:IState, stateDef:Object ):void{
-
-		var signalState:ISignalState = ISignalState( state );
 		var inject:Boolean = ( stateDef.@inject.toString() == "true" );
+		if( inject )
+			injector.mapValue( ISignalState, state, state.name );
+
+	}
+
+	protected function mapSignals( signalState:ISignalState, stateDef:Object ):void{
+
 		var exitingGuard:String = stateDef.@exitingGuard.toString();
 		var enteringGuard:String = stateDef.@enteringGuard.toString();
 		var entered:String = stateDef.@entered.toString();
 		var tearDown:String = stateDef.@teardown.toString();
 		var cancelled:String = stateDef.@cancelled.toString();
-
-		if( inject )
-			injector.mapValue( ISignalState, state, state.name );
 
 		if( exitingGuard != "" )
 			mapSignalCommand( signalState.exitingGuard, exitingGuard );
@@ -124,7 +126,7 @@ internal class ClassBag implements IClassBag {
 	private var _payload:Class;
 
 	/**
-	 * @param c the Class to be wrapped
+	 * Wraps and reflects a class reference instance )
 	 */
 	public function ClassBag( c:Class ):void{
 		_payload = c;
@@ -132,38 +134,34 @@ internal class ClassBag implements IClassBag {
 	}
 
 	/**
-	 * the name of the wrapped Class
+	 * @inheritDoc
 	 */
 	public function get name():String{
 		return _name;
 	}
 
 	/**
-	 * the Class reference
+	 * @inheritDoc
 	 */
 	public function get payload():Class{
 		return _payload;
 	}
 
 	/**
-	 * the package of the wrapped Class
+	 * @inheritDoc
 	 */
 	public function get pkg():String{
 		return _pkg;
 	}
-
+/**
+	 * @inheritDoc
+	 */
 	public function toString():String{
 		return _pkg + "." + _name;
 	}
 
 	/**
-	 * Evaluates the equality of the value passed with the wrapped Class.
-	 * can pass the full qualified class name ( my.full.package.Class or my.full.package::Class )
-	 * or just the name
-	 * or an instance of the Class ref itself
-	 * @param value item to evaluate against
-	 * @return the result
-	 *
+	 * @inheritDoc
 	 */
 	public function equals( value:Object ):Boolean{
 		return (( value.toString() == _pkg + "." + _name ) ||
