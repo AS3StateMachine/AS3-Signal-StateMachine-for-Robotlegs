@@ -1,6 +1,9 @@
 package org.osflash.statemachine.core {
 
-public interface ISignalFSMController {
+public interface IFSMController {
+
+	function get currentStateName():String;
+	
 	function action( action:String, data:Object = null ):void;
 
 	function cancel( reason:String, data:Object = null ):void;
@@ -11,12 +14,5 @@ public interface ISignalFSMController {
 
 	function removeChangedListener( handler:Function ):Function;
 
-	function addActionListener( handler:Function ):Function;
-
-	function addCancelListener( handler:Function ):Function;
-
-	function dispatchChanged( state:IState ):void
-
-	function destroy():void;
 }
 }
