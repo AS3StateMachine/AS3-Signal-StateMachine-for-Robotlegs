@@ -3,12 +3,12 @@ import flexunit.framework.Assert;
 
 import org.osflash.statemachine.core.IState;
 
-public class SignalFSMController_ChangedTest extends SignalFSMController {
+public class FSMController_ChangedTest extends FSMController {
 
 	private var _testState:IState;
 	private var _hasChangedListenerBeenCalled:Boolean;
 
-	public function SignalFSMController_ChangedTest(){
+	public function FSMController_ChangedTest(){
 		super();
 	}
 

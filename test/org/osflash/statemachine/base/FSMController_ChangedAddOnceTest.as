@@ -3,12 +3,12 @@ import flexunit.framework.Assert;
 
 import org.osflash.statemachine.core.IState;
 
-public class SignalFSMController_ChangedAddOnceTest extends SignalFSMController {
+public class FSMController_ChangedAddOnceTest extends FSMController {
 
 	private var _testState:IState;
 	private var _hasChangedListenerBeenCalled:Boolean;
 
-	public function SignalFSMController_ChangedAddOnceTest(){
+	public function FSMController_ChangedAddOnceTest(){
 		super();
 	}
 
@@ -21,7 +21,7 @@ public class SignalFSMController_ChangedAddOnceTest extends SignalFSMController 
 
 		_hasChangedListenerBeenCalled = false;
 		dispatchChanged( _testState );
-		
+
 		Assert.assertFalse( "Second call: the actionLister method should not have been called", _hasChangedListenerBeenCalled );
 	}
 

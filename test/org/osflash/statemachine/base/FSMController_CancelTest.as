@@ -1,13 +1,13 @@
 package org.osflash.statemachine.base {
 import flexunit.framework.Assert;
 
-public class SignalFSMController_CancelTest extends SignalFSMController {
+public class FSMController_CancelTest extends FSMController {
 
 	private var _reason:String = "reason/test";
 	private var _testData:Object = {};
 	private var _hasCancelListenerBeenCalled:Boolean;
 
-	public function SignalFSMController_CancelTest(){
+	public function FSMController_CancelTest(){
 		super();
 	}
 

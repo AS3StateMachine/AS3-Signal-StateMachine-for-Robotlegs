@@ -5,8 +5,8 @@ import org.osflash.statemachine.signals.Action;
 import org.osflash.statemachine.signals.Cancel;
 import org.osflash.statemachine.signals.Changed;
 
-public class SignalFSMController_PropertyTest extends SignalFSMController {
-	public function SignalFSMController_PropertyTest(){
+public class FSMController_PropertyTest extends FSMController {
+	public function FSMController_PropertyTest(){
 		super();
 	}
 

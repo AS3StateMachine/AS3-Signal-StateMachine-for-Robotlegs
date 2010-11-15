@@ -6,8 +6,8 @@ import org.osflash.statemachine.signals.Action;
 import org.osflash.statemachine.signals.Cancel;
 import org.osflash.statemachine.signals.Changed;
 
-public class SignalFSMController_DestroyTest extends SignalFSMController {
-	public function SignalFSMController_DestroyTest(){
+public class FSMController_DestroyTest extends FSMController {
+	public function FSMController_DestroyTest(){
 		super();
 	}
 

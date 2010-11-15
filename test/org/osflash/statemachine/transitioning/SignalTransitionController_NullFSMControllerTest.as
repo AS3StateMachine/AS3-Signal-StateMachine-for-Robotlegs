@@ -1,6 +1,6 @@
 package org.osflash.statemachine.transitioning {
 import org.flexunit.Assert;
-import org.osflash.statemachine.base.SignalFSMController;
+import org.osflash.statemachine.base.FSMController;
 
 public class SignalTransitionController_NullFSMControllerTest extends SignalTransitionController {
 
@@ -10,7 +10,7 @@ public class SignalTransitionController_NullFSMControllerTest extends SignalTran
 	[Test]
 	public function test():void{
 		Assert.assertNotNull( fsmController );
-		Assert.assertTrue( fsmController is SignalFSMController );
+		Assert.assertTrue( fsmController is FSMController );
 	}
 
 }

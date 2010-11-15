@@ -1,6 +1,7 @@
 package org.osflash.statemachine.transitioning {
 import org.flexunit.Assert;
-import org.osflash.statemachine.core.IState;
+	import org.osflash.statemachine.core.IFSMController;
+	import org.osflash.statemachine.core.IState;
 import org.osflash.statemachine.states.SignalState;
 
 public class SignalTransitionController_CancelExitingTransitionTest extends SignalTransitionController {
@@ -35,7 +36,7 @@ public class SignalTransitionController_CancelExitingTransitionTest extends Sign
 		_targetState.tearDown.add( onTearDownTarget );
 		_targetState.cancelled.add( onCancelledTarget );
 
-		fsmController.addChangedListener( onChanged );
+		IFSMController(fsmController).addChangedListener( onChanged );
 
 		Assert.assertFalse( "Before:: should not be marked as transitioning", isTransitioning );
 		Assert.assertFalse( "Before:: should not be marked as canceled", isCanceled );
@@ -62,7 +63,7 @@ public class SignalTransitionController_CancelExitingTransitionTest extends Sign
 		_hasOnExitedCurrentBeenCalled = true;
 		Assert.assertStrictlyEquals( "onExitingCurrent:: data payload should be passed correctly", data, _data );
 		Assert.assertFalse( "onExitingCurrent before:: should not be marked as cancelled", isCanceled );
-		fsmController.cancel( _cancelationReason, _cancellationData );
+		IFSMController(fsmController).cancel( _cancelationReason, _cancellationData );
 		Assert.assertTrue( "onExitingCurrent after::  should be marked as cancelled", isCanceled );
 		Assert.assertTrue( "onExitingCurrent:: should be marked as transitioning", isTransitioning );
 	}

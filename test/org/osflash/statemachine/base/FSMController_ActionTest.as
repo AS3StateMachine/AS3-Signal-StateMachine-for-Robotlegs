@@ -1,13 +1,13 @@
 package org.osflash.statemachine.base {
 import flexunit.framework.Assert;
 
-public class SignalFSMController_ActionTest extends SignalFSMController {
+public class FSMController_ActionTest extends FSMController {
 
 	private var _testAction:String = "action/test";
 	private var _testData:Object = {};
 	private var _hasActionListenerBeenCalled:Boolean;
 
-	public function SignalFSMController_ActionTest(){
+	public function FSMController_ActionTest(){
 		super();
 	}
 

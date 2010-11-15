@@ -1,6 +1,7 @@
 package org.osflash.statemachine.transitioning {
 import org.flexunit.Assert;
-import org.osflash.statemachine.core.IState;
+	import org.osflash.statemachine.core.IFSMController;
+	import org.osflash.statemachine.core.IState;
 import org.osflash.statemachine.states.SignalState;
 
 public class SignalTransitionController_StraightTransitionTest extends SignalTransitionController {
@@ -33,7 +34,7 @@ public class SignalTransitionController_StraightTransitionTest extends SignalTra
 		_targetState.tearDown.add( onTearDownTarget );
 		_targetState.cancelled.add( onCancelledTarget );
 
-		fsmController.addChangedListener( onChanged );
+		IFSMController(fsmController).addChangedListener( onChanged );
 
 		Assert.assertFalse( "Before:: should not be marked as transitioning", isTransitioning );
 
