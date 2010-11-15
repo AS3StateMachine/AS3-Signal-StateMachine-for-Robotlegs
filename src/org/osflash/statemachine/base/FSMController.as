@@ -1,22 +1,28 @@
 package org.osflash.statemachine.base {
 import org.osflash.signals.ISignal;
 import org.osflash.signals.Signal;
-import org.osflash.statemachine.core.ISignalFSMController;
-import org.osflash.statemachine.core.IState;
+import org.osflash.statemachine.core.IFSMController;
+	import org.osflash.statemachine.core.IFSMControllerOwner;
+	import org.osflash.statemachine.core.IState;
 import org.osflash.statemachine.signals.Action;
 import org.osflash.statemachine.signals.Cancel;
 import org.osflash.statemachine.signals.Changed;
 
-public class SignalFSMController implements ISignalFSMController {
+public class FSMController implements IFSMController, IFSMControllerOwner {
 
 	protected var _action:Signal;
 	protected var _cancel:Signal;
 	protected var _changed:Signal;
+	private var _currentStateName:String;
 
-	public function SignalFSMController(){
+	public function FSMController(){
 		_action = new Action();
 		_cancel = new Cancel();
 		_changed = new Changed();
+	}
+
+	public function get currentStateName():String{
+		return _currentStateName;
 	}
 
 	public function action( actionName:String, data:Object = null ):void{
@@ -58,6 +64,10 @@ public class SignalFSMController implements ISignalFSMController {
 		_action = null;
 		_cancel = null;
 		_changed = null;
+	}
+
+	public function setCurrentState( state:IState ):void{
+		_currentStateName = state.name;
 	}
 }
 }
