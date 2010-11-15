@@ -1,19 +1,20 @@
 package org.osflash.statemachine.transitioning {
 import org.osflash.statemachine.base.*;
-import org.osflash.statemachine.core.ISignalFSMController;
-import org.osflash.statemachine.core.IState;
+import org.osflash.statemachine.core.IFSMController;
+	import org.osflash.statemachine.core.IFSMControllerOwner;
+	import org.osflash.statemachine.core.IState;
 import org.osflash.statemachine.states.SignalState;
 
 public class SignalTransitionController extends BaseTransitionController {
-	private var _controller:ISignalFSMController;
+	private var _controller:IFSMControllerOwner;
 
-	public function SignalTransitionController( controller:ISignalFSMController = null ){
-		_controller = controller || new SignalFSMController();
+	public function SignalTransitionController( controller:IFSMControllerOwner = null ){
+		_controller = controller || new FSMController();
 		_controller.addActionListener( handleAction );
 		_controller.addCancelListener( handleCancel );
 	}
 
-	public function get fsmController():ISignalFSMController{ return _controller; }
+	public function get fsmController():IFSMControllerOwner{ return _controller; }
 
 	protected function get currentSignalState():SignalState{ return SignalState( currentState ); }
 
@@ -51,6 +52,11 @@ public class SignalTransitionController extends BaseTransitionController {
 		// Send the notification configured to be sent when this specific state becomes current
 		currentSignalState.dispatchEntered( payload );
 
+	}
+
+	override protected function setCurrentState( state:IState ):void{
+		super.setCurrentState( state );
+		_controller.setCurrentState( state );
 	}
 
 	override protected function dispatchGeneralStateChanged():void{
