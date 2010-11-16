@@ -1,0 +1,10 @@
+h2. Change log
+
+h3. AS3-Signal-StateMachine-for-Robotlegs-V0-0-001: 16/11/2010
+
+* SignalFSMInjector: added a helper class to simplify injection of the statemachine.
+* ISignalFSMController: split into IFSMController and IFSMControllerOwner.
+* IFSMController: outward-facing interface, added currentStateName getter.
+* IFSMControllerOwner: inward-facing interface, added setCurrentState method.
+* FSMController: renamed from SignalFSMController, and implemented new interfaces
+
