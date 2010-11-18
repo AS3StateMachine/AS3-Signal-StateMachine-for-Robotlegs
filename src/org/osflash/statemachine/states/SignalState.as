@@ -5,24 +5,20 @@
  Your reuse is governed by the Creative Commons Attribution 3.0 License
  */
 package org.osflash.statemachine.states {
-import org.osflash.signals.ISignal;
-import org.osflash.statemachine.base.BaseState;
-import org.osflash.statemachine.core.ISignalState;
-import org.osflash.statemachine.signals.Cancelled;
-import org.osflash.statemachine.signals.Entered;
-import org.osflash.statemachine.signals.EnteringGuard;
-import org.osflash.statemachine.signals.ExitingGuard;
-import org.osflash.statemachine.signals.TearDown;
+	import org.osflash.signals.ISignal;
+	import org.osflash.signals.Signal;
+	import org.osflash.statemachine.base.BaseState;
+	import org.osflash.statemachine.core.ISignalState;
 
-/**
+	/**
  * Defines a SignalState.
  */
 public class SignalState extends BaseState implements   ISignalState {
-	protected var _enteringGuard:EnteringGuard;
-	protected var _exitingGuard:ExitingGuard;
-	protected var _entered:Entered;
-	protected var _tearDown:TearDown;
-	protected var _cancelled:Cancelled;
+	protected var _enteringGuard:Signal;
+	protected var _exitingGuard:Signal;
+	protected var _entered:Signal;
+	protected var _tearDown:Signal;
+	protected var _cancelled:Signal;
 
 	/**
 	 * Constructor.
@@ -34,27 +30,27 @@ public class SignalState extends BaseState implements   ISignalState {
 	}
 
 	public function get entered():ISignal{
-		if( _entered == null )_entered = new Entered();
+		if( _entered == null )_entered = new Signal( Object );
 		return _entered;
 	}
 
 	public function get enteringGuard():ISignal{
-		if( _enteringGuard == null ) _enteringGuard = new EnteringGuard();
+		if( _enteringGuard == null ) _enteringGuard = new Signal( Object );
 		return _enteringGuard
 	}
 
 	public function get exitingGuard():ISignal{
-		if( _exitingGuard == null ) _exitingGuard = new ExitingGuard();
+		if( _exitingGuard == null ) _exitingGuard = new Signal( Object );
 		return _exitingGuard;
 	}
 
 	public function get cancelled():ISignal{
-		if( _cancelled == null ) _cancelled = new Cancelled();
+		if( _cancelled == null ) _cancelled = new Signal(String, Object);
 		return _cancelled;
 	}
 
 	public function get tearDown():ISignal{
-		if( _tearDown == null ) _tearDown = new TearDown();
+		if( _tearDown == null ) _tearDown = new Signal();
 		return _tearDown;
 	}
 
