@@ -1,10 +1,10 @@
 package org.osflash.statemachine.supporting {
-import flash.utils.Dictionary;
+	import flash.utils.Dictionary;
 
-import org.osflash.signals.ISignal;
-import org.robotlegs.core.ISignalCommandMap;
+	import org.osflash.signals.ISignal;
+	import org.robotlegs.core.ISignalCommandMap;
 
-public class MockSignalCommandMap implements ISignalCommandMap {
+	public class MockSignalCommandMap implements ISignalCommandMap {
 
 	public var testMap:Dictionary = new Dictionary();
 

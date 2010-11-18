@@ -1,17 +1,17 @@
 package org.osflash.statemachine.decoding {
 
-import org.flexunit.Assert;
-import org.osflash.statemachine.core.ISignalState;
-import org.osflash.statemachine.supporting.MockInjector;
-import org.osflash.statemachine.supporting.MockSignalCommandMap;
-import org.osflash.statemachine.supporting.StateDefinitions;
-import org.osflash.statemachine.supporting.cmds.SignalCommandFive;
-import org.osflash.statemachine.supporting.cmds.SignalCommandFour;
-import org.osflash.statemachine.supporting.cmds.SignalCommandOne;
-import org.osflash.statemachine.supporting.cmds.SignalCommandThree;
-import org.osflash.statemachine.supporting.cmds.SignalCommandTwo;
+	import org.flexunit.Assert;
+	import org.osflash.statemachine.core.ISignalState;
+	import org.osflash.statemachine.supporting.MockInjector;
+	import org.osflash.statemachine.supporting.MockSignalCommandMap;
+	import org.osflash.statemachine.supporting.StateDefinitions;
+	import org.osflash.statemachine.supporting.cmds.SignalCommandFive;
+	import org.osflash.statemachine.supporting.cmds.SignalCommandFour;
+	import org.osflash.statemachine.supporting.cmds.SignalCommandOne;
+	import org.osflash.statemachine.supporting.cmds.SignalCommandThree;
+	import org.osflash.statemachine.supporting.cmds.SignalCommandTwo;
 
-public class SignalStateDecoder_DecodeAndInjectStateTest extends SignalStateDecoder {
+	public class SignalStateDecoder_DecodeAndInjectStateTest extends SignalStateDecoder {
 
 	public function SignalStateDecoder_DecodeAndInjectStateTest(){
 		super( null, new MockInjector(), new MockSignalCommandMap() );

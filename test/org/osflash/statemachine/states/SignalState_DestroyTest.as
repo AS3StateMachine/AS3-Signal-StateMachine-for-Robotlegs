@@ -1,7 +1,7 @@
 package org.osflash.statemachine.states {
-import org.flexunit.Assert;
+	import org.flexunit.Assert;
 
-public class SignalState_DestroyTest extends SignalState {
+	public class SignalState_DestroyTest extends SignalState {
 
 	public function SignalState_DestroyTest(){
 		super( "state/signalstate" );

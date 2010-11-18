@@ -1,12 +1,9 @@
 package org.osflash.statemachine.base {
-import flexunit.framework.Assert;
+	import flexunit.framework.Assert;
 
-import org.osflash.signals.Signal;
-import org.osflash.statemachine.signals.Action;
-import org.osflash.statemachine.signals.Cancel;
-import org.osflash.statemachine.signals.Changed;
+	import org.osflash.signals.Signal;
 
-public class FSMController_DestroyTest extends FSMController {
+	public class FSMController_DestroyTest extends FSMController {
 	public function FSMController_DestroyTest(){
 		super();
 	}

@@ -1,7 +1,6 @@
 package org.osflash.statemachine.transitioning {
-import org.flexunit.Assert;
-import org.osflash.statemachine.base.FSMController;
-import org.osflash.statemachine.core.IFSMController;
+	import org.flexunit.Assert;
+	import org.osflash.statemachine.base.FSMController;
 	import org.osflash.statemachine.core.IFSMControllerOwner;
 
 	public class SignalTransitionController_FSMControllerTest extends SignalTransitionController {

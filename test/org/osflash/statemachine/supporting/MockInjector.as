@@ -1,10 +1,10 @@
 package org.osflash.statemachine.supporting {
-import flash.system.ApplicationDomain;
+	import flash.system.ApplicationDomain;
 
-import org.osflash.statemachine.core.IState;
-import org.robotlegs.core.IInjector;
+	import org.osflash.statemachine.core.IState;
+	import org.robotlegs.core.IInjector;
 
-public class MockInjector implements IInjector {
+	public class MockInjector implements IInjector {
 
 	public var stateMap:Object;
 

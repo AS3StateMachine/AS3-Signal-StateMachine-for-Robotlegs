@@ -1,7 +1,7 @@
 package org.osflash.statemachine.transitioning {
-import org.flexunit.Assert;
+	import org.flexunit.Assert;
 
-public class SignalTransitionController_ActionCallbackTest extends SignalTransitionController {
+	public class SignalTransitionController_ActionCallbackTest extends SignalTransitionController {
 
 	private var _data:Object;
 	private var _action:String;

@@ -1,10 +1,10 @@
 package org.osflash.statemachine.decoding {
-import org.flexunit.Assert;
-import org.osflash.statemachine.supporting.cmds.SignalCommandOne;
-import org.osflash.statemachine.supporting.cmds.SignalCommandThree;
-import org.osflash.statemachine.supporting.cmds.SignalCommandTwo;
+	import org.flexunit.Assert;
+	import org.osflash.statemachine.supporting.cmds.SignalCommandOne;
+	import org.osflash.statemachine.supporting.cmds.SignalCommandThree;
+	import org.osflash.statemachine.supporting.cmds.SignalCommandTwo;
 
-public class SignalStateDecoder_AddCommandClassTest extends SignalStateDecoder {
+	public class SignalStateDecoder_AddCommandClassTest extends SignalStateDecoder {
 
 	public function SignalStateDecoder_AddCommandClassTest(){
 		super( null, null, null );

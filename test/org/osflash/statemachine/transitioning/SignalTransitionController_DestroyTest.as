@@ -1,8 +1,8 @@
 package org.osflash.statemachine.transitioning {
-import org.flexunit.Assert;
-import org.osflash.statemachine.states.SignalState;
+	import org.flexunit.Assert;
+	import org.osflash.statemachine.states.SignalState;
 
-public class SignalTransitionController_DestroyTest extends SignalTransitionController {
+	public class SignalTransitionController_DestroyTest extends SignalTransitionController {
 
 	private var _targetState:SignalState;
 

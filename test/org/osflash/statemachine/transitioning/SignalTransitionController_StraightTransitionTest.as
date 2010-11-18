@@ -1,10 +1,10 @@
 package org.osflash.statemachine.transitioning {
-import org.flexunit.Assert;
+	import org.flexunit.Assert;
 	import org.osflash.statemachine.core.IFSMController;
 	import org.osflash.statemachine.core.IState;
-import org.osflash.statemachine.states.SignalState;
+	import org.osflash.statemachine.states.SignalState;
 
-public class SignalTransitionController_StraightTransitionTest extends SignalTransitionController {
+	public class SignalTransitionController_StraightTransitionTest extends SignalTransitionController {
 
 	private var _data:Object = {};
 	private var _targetState:SignalState;

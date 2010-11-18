@@ -1,12 +1,12 @@
 package org.osflash.statemachine.decoding {
-import org.flexunit.Assert;
-import org.osflash.statemachine.core.ISignalState;
-import org.osflash.statemachine.states.SignalState;
-import org.osflash.statemachine.supporting.MockInjector;
-import org.osflash.statemachine.supporting.MockSignalCommandMap;
-import org.osflash.statemachine.supporting.StateDefinitions;
+	import org.flexunit.Assert;
+	import org.osflash.statemachine.core.ISignalState;
+	import org.osflash.statemachine.states.SignalState;
+	import org.osflash.statemachine.supporting.MockInjector;
+	import org.osflash.statemachine.supporting.MockSignalCommandMap;
+	import org.osflash.statemachine.supporting.StateDefinitions;
 
-public class SignalStateDecoder_UnregisteredCommandErrorTest extends SignalStateDecoder {
+	public class SignalStateDecoder_UnregisteredCommandErrorTest extends SignalStateDecoder {
 
 	public function SignalStateDecoder_UnregisteredCommandErrorTest(){
 		super( null, new MockInjector(), new MockSignalCommandMap() );

@@ -1,7 +1,7 @@
 package org.osflash.statemachine.base {
-import flexunit.framework.Assert;
+	import flexunit.framework.Assert;
 
-public class FSMController_ActionTest extends FSMController {
+	public class FSMController_ActionTest extends FSMController {
 
 	private var _testAction:String = "action/test";
 	private var _testData:Object = {};

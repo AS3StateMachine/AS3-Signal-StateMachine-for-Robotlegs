@@ -1,9 +1,9 @@
 package org.osflash.statemachine.base {
-import flexunit.framework.Assert;
+	import flexunit.framework.Assert;
 
-import org.osflash.statemachine.core.IState;
+	import org.osflash.statemachine.core.IState;
 
-public class FSMController_ChangedAddOnceTest extends FSMController {
+	public class FSMController_ChangedAddOnceTest extends FSMController {
 
 	private var _testState:IState;
 	private var _hasChangedListenerBeenCalled:Boolean;
