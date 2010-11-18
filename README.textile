@@ -1,4 +1,41 @@
-h2. Coming soon
+h2. AS3 Signal StateMachine for Robotlegs
+
+An Signal driven StateMachine utility with six transition phases:
+
+version 0.1.000
+
+# *entering guard:* Allows for testing of conditions to assess whether it is permissible to enter the target state. If not, the transition can be cancelled.
+# *exiting guard:* The first state-specific phase, it allows for testing of conditions to assess whether it is permissible to leave the current state. If not, the transition can be cancelled.
+# *cancelled:* Occurs if the transition is cancelled in either the *entering guard* or the *exiting guard*.
+# *teardown:* Occurs after the state has changed, but before the *entered* phase of the target state
+# *entered:* the final state-specific phase indicates that the transition to the new state has been successful.
+# *changed:* this post-transition phase sends a general notification that the state has changed.
+
+h3. Dependencies:
+
+* "StateMachine Base:":http://github.com/AS3StateMachine/AS3-StateMachine-Base the base classes for this utility.
+* "AS3 Signals (0.7):":https://github.com/robertpenner/as3-signals Robert Penner's AS3 Signals.
+* "Robotlegs (v1.4.0):":https://github.com/robotlegs/robotlegs-framework The Robotlegs framework.
+* "SignalCommandMap:":https://github.com/joelhooks/signals-extensions-CommandSignal Joel Hooks' Robotlegs extention.
+
+
+h3. Examples:
+
+* "Signal StateMachine for Robotlegs-Prototype:":https://github.com/AS3StateMachine/AS3-Signal-StateMachine-for-Robotlegs-Prototype a very basic example that doubles as a quick test.
+
+
+h3. See also:
+
+* "Standard Event StateMachine:":http://github.com/AS3StateMachine/AS3-Standard-Event-StateMachine this extension can be used in any event driven framework (eg Robotlegs).
+* "Enhanced Event StateMachine:":http://github.com/AS3StateMachine/AS3-Enhanced-Event-StateMachine this extension can be used in any event driven framework (eg Robotlegs).
+* "Standard StateMachine for pureMVC:":http://github.com/AS3StateMachine/AS3-Standard-StateMachine-for-PureMVC replicates the original utilities functionality.
+
+h3. Links:
+
+"StateMachine.org":http:/statemachine.org
+"What is a Finite State Machine? (wikipedia definition)":http://en.wikipedia.org/wiki/Finite-state_machine
+"Robotlegs Website":http://www.robotlegs.org
+"PureMVC Website":http://www.puremvc.org
 
 h2. License
 
