@@ -61,5 +61,11 @@ package org.osflash.statemachine.supporting {
 		return null;
 	}
 
-}
+		public function get applicationDomain():ApplicationDomain{
+			return null;
+		}
+
+		public function set applicationDomain( value:ApplicationDomain ):void{
+		}
+	}
 }
