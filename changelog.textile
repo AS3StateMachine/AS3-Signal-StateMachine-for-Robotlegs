@@ -1,5 +1,15 @@
 h2. Change log
 
+h3. AS3-Signal-StateMachine-for-Robotlegs-V0-1-000: 18/11/2010
+
+* Brought in line with Robotlegs v1.4.0.
+* Brought in line with Signals v0.8.0.
+
+h3. AS3-Signal-StateMachine-for-Robotlegs-V0-0-002: 16/11/2010
+
+* FSMController: removed Signal subclasses in favour of Signals.
+* SignalState: removed Signal subclasses in favour of Signals.
+
 h3. AS3-Signal-StateMachine-for-Robotlegs-V0-0-001: 16/11/2010
 
 * SignalFSMInjector: added a helper class to simplify injection of the statemachine.

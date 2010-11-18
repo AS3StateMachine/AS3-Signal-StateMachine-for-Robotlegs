@@ -14,7 +14,7 @@ version 0.1.000
 h3. Dependencies:
 
 * "StateMachine Base:":http://github.com/AS3StateMachine/AS3-StateMachine-Base the base classes for this utility.
-* "AS3 Signals (0.7):":https://github.com/robertpenner/as3-signals Robert Penner's AS3 Signals.
+* "AS3 Signals (v0.8):":https://github.com/robertpenner/as3-signals Robert Penner's AS3 Signals.
 * "Robotlegs (v1.4.0):":https://github.com/robotlegs/robotlegs-framework The Robotlegs framework.
 * "SignalCommandMap:":https://github.com/joelhooks/signals-extensions-CommandSignal Joel Hooks' Robotlegs extention.
 
