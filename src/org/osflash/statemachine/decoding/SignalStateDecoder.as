@@ -9,17 +9,32 @@ import org.osflash.statemachine.states.SignalState;
 import org.robotlegs.core.IInjector;
 import org.robotlegs.core.ISignalCommandMap;
 
+	/**
+	 * USed by the FSMInjector to encapsulate the decoding of the
+	 * XML state declaration into SignalStates.
+	 *
+	 * @see org.osflash.statemachine.FSMInjector
+	 */
 public class SignalStateDecoder extends BaseXMLStateDecoder {
 	protected var classBagMap:Array;
 	protected var injector:IInjector;
 	protected var signalCommandMap:ISignalCommandMap;
 
+	/**
+	 * Creates and instance of a SignalStateDecoder
+	 * @param fsm the state declaration
+	 * @param injector the injector for the current IContext
+	 * @param signalCommandMap the ISignalCommandMap for the current IContext
+	 */
 	public function SignalStateDecoder( fsm:XML, injector:IInjector, signalCommandMap:ISignalCommandMap ):void{
 		this.injector = injector;
 		this.signalCommandMap = signalCommandMap;
 		super( fsm );
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	override public final function decodeState( stateDef:Object ):IState{
 		// Create State object
 		var state:ISignalState = getState( stateDef );
@@ -29,6 +44,9 @@ public class SignalStateDecoder extends BaseXMLStateDecoder {
 		return state;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	override public function destroy():void{
 		injector = null;
 		signalCommandMap = null;

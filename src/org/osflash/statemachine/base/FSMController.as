@@ -10,6 +10,7 @@ package org.osflash.statemachine.base {
 		 */
 	public class FSMController implements IFSMController, IFSMControllerOwner {
 
+		
 		protected var _action:Signal;
 		protected var _cancel:Signal;
 		protected var _changed:Signal;
