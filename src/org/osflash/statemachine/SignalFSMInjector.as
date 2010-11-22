@@ -7,6 +7,10 @@ package org.osflash.statemachine {
 	import org.robotlegs.core.IInjector;
 	import org.robotlegs.core.ISignalCommandMap;
 
+	/**
+	 * A helper class that wraps the injection of the Signal StateMachine
+	 * to simplify creation.
+	 */
 	public class SignalFSMInjector {
 
 		private var _decoder:SignalStateDecoder;
@@ -16,11 +20,21 @@ package org.osflash.statemachine {
 		private var _stateMachine:IStateMachine;
 		private var _transitionController:SignalTransitionController;
 
+		/**
+		 * Creates an instance of the injector
+		 * @param injector the IInjector into which the StateMachine elements will be injected
+		 * @param signalCommandMap the ISignalCommandMap in which the commands will be mapped
+		 * to each states' Signals
+		 */
 		public function SignalFSMInjector( injector:IInjector, signalCommandMap:ISignalCommandMap ){
 			_injector = injector;
 			_signalCommandMap = signalCommandMap;
 		}
 
+		/**
+		 * Initiates the Injector
+		 * @param stateDefinition the StateMachine declaration
+		 */
 		public function initiate( stateDefinition:XML ):void{
 			// create a SignalStateDecoder and pass it the State Declaration
 			_decoder = new SignalStateDecoder( stateDefinition, _injector, _signalCommandMap );
@@ -32,10 +46,20 @@ package org.osflash.statemachine {
 			_stateMachine = new StateMachine( _transitionController );
 		}
 
+		/**
+		 * Adds a commandClass to the decoder.
+		 *
+		 * Any Command declared in the StateDeclaration must be added before the StateMachine is injected
+		 * @param commandClass a command Class reference
+		 * @return Whether the command Class was added successfully
+		 */
 		public function addCommandClass( commandClass:Class ):Boolean{
 			return _decoder.addCommandClass( commandClass );
 		}
 
+		/**
+		 * Injects the StateMachine
+		 */
 		public function inject():void{
 			// inject the statemachine, it will proceed to the initial state.
 			// NB no injection rules have been set for view or model yet, the initial state
@@ -51,6 +75,11 @@ package org.osflash.statemachine {
 
 		}
 
+		/**
+		 * The destroy method for GC.
+		 *
+		 * NB Once injected the instance is no longer needed, so it can be destroyed
+		 */
 		public function destroy():void{
 			_fsmInjector.destroy();
 			_fsmInjector = null;

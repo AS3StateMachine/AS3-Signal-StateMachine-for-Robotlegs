@@ -4,66 +4,104 @@ package org.osflash.statemachine.base {
 	import org.osflash.statemachine.core.IFSMControllerOwner;
 	import org.osflash.statemachine.core.IState;
 
+		/**
+		 * FSMController composes the Signals that communicate between the StateMachine
+		 * and the framework actors.  It should be injected its IFSMController interface.
+		 */
 	public class FSMController implements IFSMController, IFSMControllerOwner {
 
-	protected var _action:Signal;
-	protected var _cancel:Signal;
-	protected var _changed:Signal;
-	private var _currentStateName:String;
+		protected var _action:Signal;
+		protected var _cancel:Signal;
+		protected var _changed:Signal;
+		private var _currentStateName:String;
 
-	public function FSMController(){
-		_action = new Signal( String, Object);
-		_cancel = new Signal( String, Object);
-		_changed = new Signal( IState );
-	}
 
-	public function get currentStateName():String{
-		return _currentStateName;
-	}
+		public function FSMController(){
+			_action = new Signal( String, Object );
+			_cancel = new Signal( String, Object );
+			_changed = new Signal( IState );
+		}
 
-	public function action( actionName:String, data:Object = null ):void{
-		 _action.dispatch( actionName, data );
-	}
+		/**
+		 * @inheritDoc
+		 */
+		public function get currentStateName():String{
+			return _currentStateName;
+		}
 
-	public function cancel( reason:String, data:Object = null ):void{
-		_cancel.dispatch( reason, data );
-	}
+		/**
+		 * @inheritDoc
+		 */
+		public function action( actionName:String, payload:Object = null ):void{
+			_action.dispatch( actionName, payload );
+		}
 
-	public function addChangedListener( handler:Function ):Function{
-		return _changed.add( handler );
-	}
+		/**
+		 * @inheritDoc
+		 */
+		public function cancel( reason:String, payload:Object = null ):void{
+			_cancel.dispatch( reason, payload );
+		}
 
-	public function addChangedListenerOnce( handler:Function ):Function{
-		return _changed.addOnce( handler );
-	}
+		/**
+		 * @inheritDoc
+		 */
+		public function addChangedListener( listener:Function ):Function{
+			return _changed.add( listener );
+		}
 
-	public function removeChangedListener( handler:Function ):Function{
-		return _changed.remove( handler );
-	}
+		/**
+		 * @inheritDoc
+		 */
+		public function addChangedListenerOnce( listener:Function ):Function{
+			return _changed.addOnce( listener );
+		}
 
-	public function addActionListener( handler:Function ):Function{
-		return _action.add( handler );
-	}
+		/**
+		 * @inheritDoc
+		 */
+		public function removeChangedListener( listener:Function ):Function{
+			return _changed.remove( listener );
+		}
 
-	public function addCancelListener( handler:Function ):Function{
-		return _cancel.add( handler );
-	}
+		/**
+		 * @inheritDoc
+		 */
+		public function addActionListener( listener:Function ):Function{
+			return _action.add( listener );
+		}
 
-	public function dispatchChanged( state:IState ):void{
-		_changed.dispatch( state );
-	}
+		/**
+		 * @inheritDoc
+		 */
+		public function addCancelListener( listener:Function ):Function{
+			return _cancel.add( listener );
+		}
 
-	public function destroy():void{
-		_action.removeAll();
-		_cancel.removeAll();
-		_changed.removeAll();
-		_action = null;
-		_cancel = null;
-		_changed = null;
-	}
+		/**
+		 * @inheritDoc
+		 */
+		public function dispatchChanged( state:IState ):void{
+			_changed.dispatch( state );
+		}
 
-	public function setCurrentState( state:IState ):void{
-		_currentStateName = state.name;
+		/**
+		 * @inheritDoc
+		 */
+		public function destroy():void{
+			_action.removeAll();
+			_cancel.removeAll();
+			_changed.removeAll();
+			_action = null;
+			_cancel = null;
+			_changed = null;
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function setCurrentState( state:IState ):void{
+			_currentStateName = state.name;
+		}
 	}
-}
 }
