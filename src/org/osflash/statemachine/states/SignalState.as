@@ -11,15 +11,33 @@ package org.osflash.statemachine.states {
 	import org.osflash.statemachine.core.ISignalState;
 
 	/**
-	 * A SignalState can be injected by adding an <code>inject="true"</code> attribute
-	 * to its xml state declaration. Any state injected will be against its ISignalState
-	 * interface, with a name property equal to the states' name.
+	 * A SignalState defines five transition phases as Signals. 
 	 */
 	public class SignalState extends BaseState implements ISignalState {
+
+		/**
+		 * @private
+		 */
 		protected var _enteringGuard:Signal;
+
+		/**
+		 * @private
+		 */
 		protected var _exitingGuard:Signal;
+
+		/**
+		 * @private
+		 */
 		protected var _entered:Signal;
+
+		/**
+		 * @private
+		 */
 		protected var _tearDown:Signal;
+
+		/**
+		 * @private
+		 */
 		protected var _cancelled:Signal;
 
 		/**

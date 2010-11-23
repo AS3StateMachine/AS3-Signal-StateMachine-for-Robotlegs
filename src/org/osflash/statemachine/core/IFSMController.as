@@ -2,7 +2,6 @@ package org.osflash.statemachine.core {
 
 	/**
 	 * The outward-facing contract between the StateMachine and the framework actors.
-	 * The FSMController should be injected to this interface.
 	 */
 	public interface IFSMController {
 		/**

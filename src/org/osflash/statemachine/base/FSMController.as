@@ -4,18 +4,31 @@ package org.osflash.statemachine.base {
 	import org.osflash.statemachine.core.IFSMControllerOwner;
 	import org.osflash.statemachine.core.IState;
 
-		/**
-		 * FSMController composes the Signals that communicate between the StateMachine
-		 * and the framework actors.  It should be injected its IFSMController interface.
-		 */
+	/**
+	 * SignalStateMachine FSMController composes the Signals that communicate between the StateMachine
+	 * and the framework actors.  It should be injected its IFSMController interface.
+	 */
 	public class FSMController implements IFSMController, IFSMControllerOwner {
 
-		
+		/**
+		 * @private
+		 */
 		protected var _action:Signal;
-		protected var _cancel:Signal;
-		protected var _changed:Signal;
-		private var _currentStateName:String;
 
+		/**
+		 * @private
+		 */
+		protected var _cancel:Signal;
+
+		/**
+		 * @private
+		 */
+		protected var _changed:Signal;
+
+		/**
+		 * @private
+		 */
+		private var _currentStateName:String;
 
 		public function FSMController(){
 			_action = new Signal( String, Object );
