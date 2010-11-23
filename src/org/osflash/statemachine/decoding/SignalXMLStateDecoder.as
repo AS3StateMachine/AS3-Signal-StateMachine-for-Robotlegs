@@ -39,7 +39,7 @@ package org.osflash.statemachine.decoding {
 		protected var signalCommandMap:ISignalCommandMap;
 
 		/**
-		 * Creates and instance of a SignalStateDecoder
+		 * Creates an instance of a SignalXMLStateDecoder
 		 * @param fsm the state declaration
 		 * @param injector the injector for the current IContext
 		 * @param signalCommandMap the ISignalCommandMap for the current IContext
@@ -75,21 +75,57 @@ package org.osflash.statemachine.decoding {
 			super.destroy();
 		}
 
+		/**
+		 * Adds a command Class reference.
+		 *
+		 * Any command declared in the state declaration must be added here.
+		 * @param commandClass the command class
+		 * @return whether the command class has been add successfully
+		 */
 		public function addCommandClass( commandClass:Class ):Boolean{
 			if( classBagMap == null ) classBagMap = [];
-			if( hasClass( commandClass ) ) return false;
+			if( hasCommandClass( commandClass ) ) return false;
 			classBagMap.push( new ClassBag( commandClass ) );
 			return true;
 		}
 
-		public function hasClass( name:Object ):Boolean{
-			return ( getClass( name ) != null );
+		/**
+		 * Test to determine whether a particular class has already been added
+		 * to the decoder
+		 * @param name this can either be the name, the fully qualified name or an instance of the Class
+		 * @return 
+		 */
+		public function hasCommandClass( name:Object ):Boolean{
+			return ( getCommandClass( name ) != null );
 		}
 
+		/**
+		 * Retrieves a command class registered with the addCommandClass method
+		 * @param name this can either be the name, the fully qualified name or an instance of the Class
+		 * @return the class reference
+		 */
+		protected function getCommandClass( name:Object ):Class{
+			for each ( var cb:ClassBag in classBagMap ){
+				if( cb.equals( name ) ) return cb.payload;
+			}
+			return null;
+		}
+
+		/**
+		 * Factory method for creating concrete ISignalState. Override this to allow for the
+		 * creation of custom states
+		 * @param stateDef the declaration for a single state
+		 * @return an instance of the state described in the data
+		 */
 		protected function getState( stateDef:Object ):ISignalState{
 			return new SignalState( stateDef.@name.toString() );
 		}
 
+		/**
+		 * Decodes the State's transitions from the state declaration
+		 * @param state the state into which to inject the transitions
+		 * @param stateDef the state's declaration
+		 */
 		protected function decodeTransitions( state:IState, stateDef:Object ):void{
 			var transitions:XMLList = stateDef..transition as XMLList;
 			for( var i:int; i < transitions.length(); i++ ){
@@ -98,6 +134,11 @@ package org.osflash.statemachine.decoding {
 			}
 		}
 
+		/**
+		 * Injects a IState into the DI Container if it is marked for injection in its declaration
+		 * @param state the IState to be injected
+		 * @param stateDef the state's declaration
+		 */
 		protected function injectState( state:IState, stateDef:Object ):void{
 			var inject:Boolean = ( stateDef.@inject.toString() == "true" );
 			if( inject )
@@ -105,6 +146,12 @@ package org.osflash.statemachine.decoding {
 
 		}
 
+		/**
+		 * Maps the commands referenced int he state declaration to their appropriate
+		 * state transition phases
+		 * @param signalState the state whose ISignal phases are to be mapped to
+		 * @param stateDef the state's declaration
+		 */
 		protected function mapSignals( signalState:ISignalState, stateDef:Object ):void{
 
 			var exitingGuard:String = stateDef.@exitingGuard.toString();
@@ -130,15 +177,11 @@ package org.osflash.statemachine.decoding {
 
 		}
 
-		protected function getClass( name:Object ):Class{
-			for each ( var cb:ClassBag in classBagMap ){
-				if( cb.equals( name ) ) return cb.payload;
-			}
-			return null;
-		}
-
+		/**
+		 * @private
+		 */
 		private function mapSignalCommand( signal:ISignal, commandClassName:String ):void{
-			var c:Class = getClass( commandClassName );
+			var c:Class = getCommandClass( commandClassName );
 			if( c == null )throw new UnregisteredSignalCommandError( commandClassName );
 			signalCommandMap.mapSignal( signal, c );
 		}
