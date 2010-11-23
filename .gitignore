@@ -8,7 +8,7 @@ libs/*
 obj/*
 .idea/*
 
-bin/_flexunit.swf
+bin/*
 
 .actionScriptProperties
 .flexProperties
