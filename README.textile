@@ -17,7 +17,7 @@ h3. Bins
 
 h3. Documentation
 
-* "Documentation":http://statemachine.org/docs/signal_statemachine_f0  r_robotlegs/
+* "Documentation":http://statemachine.org/docs/signal_statemachine_for_robotlegs/
 * Tutorials - to come
 
 h3. Dependencies:
