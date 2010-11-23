@@ -2,7 +2,7 @@ package org.osflash.statemachine {
 	import org.osflash.statemachine.core.IFSMController;
 	import org.osflash.statemachine.core.IFSMInjector;
 	import org.osflash.statemachine.core.IStateMachine;
-	import org.osflash.statemachine.decoding.SignalStateDecoder;
+	import org.osflash.statemachine.decoding.SignalXMLStateDecoder;
 	import org.osflash.statemachine.transitioning.SignalTransitionController;
 	import org.robotlegs.core.IInjector;
 	import org.robotlegs.core.ISignalCommandMap;
@@ -13,11 +13,34 @@ package org.osflash.statemachine {
 	 */
 	public class SignalFSMInjector {
 
-		private var _decoder:SignalStateDecoder;
+		/**
+		 * @private
+		 */
+		private var _decoder:SignalXMLStateDecoder;
+
+		/**
+		 * @private
+		 */
 		private var _injector:IInjector;
+
+		/**
+		 * @private
+		 */
 		private var _signalCommandMap:ISignalCommandMap;
+
+		/**
+		 * @private
+		 */
 		private var _fsmInjector:IFSMInjector;
+
+		/**
+		 * @private
+		 */
 		private var _stateMachine:IStateMachine;
+
+		/**
+		 * @private
+		 */
 		private var _transitionController:SignalTransitionController;
 
 		/**
@@ -37,7 +60,7 @@ package org.osflash.statemachine {
 		 */
 		public function initiate( stateDefinition:XML ):void{
 			// create a SignalStateDecoder and pass it the State Declaration
-			_decoder = new SignalStateDecoder( stateDefinition, _injector, _signalCommandMap );
+			_decoder = new SignalXMLStateDecoder( stateDefinition, _injector, _signalCommandMap );
 			// add it the FSMInjector
 			_fsmInjector = new FSMInjector( _decoder );
 			// create a transitionController
