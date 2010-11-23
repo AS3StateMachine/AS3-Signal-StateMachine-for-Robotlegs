@@ -1,5 +1,11 @@
 h2. Change log
 
+h3. AS3-Signal-StateMachine-for-Robotlegs-V0-1-001: 18/11/2010
+
+* SignalStateDecoder: renamed to SignalXMLStateDecoder
+* SignalXMLStateDecoder: renamed hasClass to hasCommandClass
+* SignalXMLStateDecoder: renamed getClass to getCommandClass
+
 h3. AS3-Signal-StateMachine-for-Robotlegs-V0-1-000: 18/11/2010
 
 * Brought in line with Robotlegs v1.4.0.
