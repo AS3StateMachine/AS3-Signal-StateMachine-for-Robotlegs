@@ -6,7 +6,7 @@ package org.osflash.statemachine.decoding {
 	import org.osflash.statemachine.supporting.MockSignalCommandMap;
 	import org.osflash.statemachine.supporting.StateDefinitions;
 
-	public class SignalStateDecoder_UnregisteredCommandErrorTest extends SignalStateDecoder {
+	public class SignalStateDecoder_UnregisteredCommandErrorTest extends SignalXMLStateDecoder {
 
 	public function SignalStateDecoder_UnregisteredCommandErrorTest(){
 		super( null, new MockInjector(), new MockSignalCommandMap() );

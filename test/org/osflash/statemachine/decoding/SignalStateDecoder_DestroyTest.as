@@ -8,7 +8,7 @@ package org.osflash.statemachine.decoding {
 	import org.osflash.statemachine.supporting.cmds.SignalCommandThree;
 	import org.osflash.statemachine.supporting.cmds.SignalCommandTwo;
 
-	public class SignalStateDecoder_DestroyTest extends SignalStateDecoder {
+	public class SignalStateDecoder_DestroyTest extends SignalXMLStateDecoder {
 
 	public function SignalStateDecoder_DestroyTest(){
 		super( new StateDefinitions().data, new MockInjector(), new MockSignalCommandMap() );

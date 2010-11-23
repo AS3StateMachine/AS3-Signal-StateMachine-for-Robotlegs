@@ -4,7 +4,7 @@ package org.osflash.statemachine.decoding {
 	import org.osflash.statemachine.supporting.cmds.SignalCommandThree;
 	import org.osflash.statemachine.supporting.cmds.SignalCommandTwo;
 
-	public class SignalStateDecoder_AddCommandClassTest extends SignalStateDecoder {
+	public class SignalStateDecoder_AddCommandClassTest extends SignalXMLStateDecoder {
 
 	public function SignalStateDecoder_AddCommandClassTest(){
 		super( null, null, null );

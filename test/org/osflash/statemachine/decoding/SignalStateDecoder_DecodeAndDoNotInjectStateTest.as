@@ -11,7 +11,7 @@ package org.osflash.statemachine.decoding {
 	import org.osflash.statemachine.supporting.cmds.SignalCommandThree;
 	import org.osflash.statemachine.supporting.cmds.SignalCommandTwo;
 
-	public class SignalStateDecoder_DecodeAndDoNotInjectStateTest extends SignalStateDecoder {
+	public class SignalStateDecoder_DecodeAndDoNotInjectStateTest extends SignalXMLStateDecoder {
 
 	public function SignalStateDecoder_DecodeAndDoNotInjectStateTest(){
 		super( null, new MockInjector(), new MockSignalCommandMap() );
