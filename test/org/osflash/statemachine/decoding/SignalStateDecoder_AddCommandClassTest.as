@@ -23,14 +23,14 @@ package org.osflash.statemachine.decoding {
 		Assert.assertFalse( "Adding SignalCommandTwo again should fail", addCommandClass( SignalCommandTwo ) );
 		Assert.assertFalse( "Adding SignalCommandThree again should fail", addCommandClass( SignalCommandThree ) );
 
-		Assert.assertTrue( "Should have Class, testing with class referance", hasClass( SignalCommandOne ) );
-		Assert.assertTrue( "Should have Class, testing with class name", hasClass( "SignalCommandTwo" ) );
-		Assert.assertTrue( "Should have Class, testing with full class path", hasClass( "org.osflash.statemachine.supporting.cmds.SignalCommandThree" ) );
-		Assert.assertTrue( "Should have Class, testing with fully qualified class name", hasClass( "org.osflash.statemachine.supporting.cmds::SignalCommandThree" ) );
+		Assert.assertTrue( "Should have Class, testing with class referance", hasCommandClass( SignalCommandOne ) );
+		Assert.assertTrue( "Should have Class, testing with class name", hasCommandClass( "SignalCommandTwo" ) );
+		Assert.assertTrue( "Should have Class, testing with full class path", hasCommandClass( "org.osflash.statemachine.supporting.cmds.SignalCommandThree" ) );
+		Assert.assertTrue( "Should have Class, testing with fully qualified class name", hasCommandClass( "org.osflash.statemachine.supporting.cmds::SignalCommandThree" ) );
 
-		Assert.assertStrictlyEquals( "The class expected should be SignalCommandOne", SignalCommandOne, getClass( "SignalCommandOne" ) );
-		Assert.assertStrictlyEquals( "The class expected should be SignalCommandTwo", SignalCommandTwo, getClass( "SignalCommandTwo" ) );
-		Assert.assertStrictlyEquals( "The class expected should be SignalCommandThree", SignalCommandThree, getClass( "SignalCommandThree" ) );
+		Assert.assertStrictlyEquals( "The class expected should be SignalCommandOne", SignalCommandOne, getCommandClass( "SignalCommandOne" ) );
+		Assert.assertStrictlyEquals( "The class expected should be SignalCommandTwo", SignalCommandTwo, getCommandClass( "SignalCommandTwo" ) );
+		Assert.assertStrictlyEquals( "The class expected should be SignalCommandThree", SignalCommandThree, getCommandClass( "SignalCommandThree" ) );
 
 	}
 
