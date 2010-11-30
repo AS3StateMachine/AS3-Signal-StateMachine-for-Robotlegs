@@ -24,13 +24,24 @@ package org.osflash.statemachine.core {
 		 * listeners.
 		 * @param state the current state.
 		 */
-		function dispatchChanged( state:IState ):void
+		function dispatchChanged( stateName:String ):void
 
 		/**
 		 * Sets the current state when the transition has been successful
 		 * @param state the state that is to be the current state
 		 */
 		function setCurrentState( state:IState ):void;
+
+		/**
+		 * Sets whether the StateMachine is undergoing a transition cycle
+		 */
+		function setIsTransition( value:Boolean ):void;
+
+		/**
+		 * Sets the current phase of the transition cycle
+		 * @see TransitionPhases
+		 */
+		function setTransitionPhase( value:String ):void;
 
 		/**
 		 * The destroy method for GC
