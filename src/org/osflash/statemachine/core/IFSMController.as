@@ -10,11 +10,22 @@ package org.osflash.statemachine.core {
 		function get currentStateName():String;
 
 		/**
+		 * Indicates whether the StateMachine is undergoing a transition cycle.
+		 */
+		function get isTransitioning():Boolean;
+
+		/**
+		 * The current phase of the transition cycle
+		 * @see TransitionPhases
+		 */
+		function get transitionPhase():String;
+
+		/**
 		 * Sends an action to the StateMachine, precipitating a state transition.
-		 * @param action the name of the action.
+		 * @param actionName the name of the action.
 		 * @param payload the data to be sent with the action.
 		 */
-		function action( action:String, payload:Object = null ):void;
+		function action( actionName:String, payload:Object = null ):void;
 
 		/**
 		 * Cancels the current transition.
