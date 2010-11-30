@@ -1,6 +1,7 @@
 package org.osflash.statemachine.decoding {
 
 	import org.osflash.signals.ISignal;
+	import org.osflash.statemachine.base.BaseState;
 	import org.osflash.statemachine.base.BaseXMLStateDecoder;
 	import org.osflash.statemachine.core.ISignalState;
 	import org.osflash.statemachine.core.IState;
@@ -68,8 +69,8 @@ package org.osflash.statemachine.decoding {
 		override public function destroy():void{
 			injector = null;
 			signalCommandMap = null;
-			for each ( var cb:ClassBag in classBagMap ){
-				cb.destroy();
+			if( classBagMap != null){
+				for each ( var cb:ClassBag in classBagMap )	cb.destroy();
 			}
 			classBagMap = null;
 			super.destroy();
