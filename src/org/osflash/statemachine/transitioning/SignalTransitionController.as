@@ -54,33 +54,42 @@ package org.osflash.statemachine.transitioning {
 			var targetState:SignalState = SignalState( target );
 
 			// Exit the current State
-			if( currentState != null )
+			if( currentState != null ){
+				_controller.setTransitionPhase( TransitionPhases.EXITING_GUARD);
 				currentSignalState.dispatchExitingGuard( payload );
+			}
+
 
 			// Check to see whether the exiting guard has been canceled
-			if( isCanceled ){
+			if( isCanceled  ){
+				_controller.setTransitionPhase( TransitionPhases.CANCELLED);
 				if( currentState != null )
 					currentSignalState.dispatchCancelled( cancellationReason, cachedPayload || payload );
 				return;
 			}
 
 			// Enter the next State
+			_controller.setTransitionPhase( TransitionPhases.ENTERING_GUARD);
 			targetState.dispatchEnteringGuard( payload );
 
 			// Check to see whether the entering guard has been canceled
 			if( isCanceled ){
+				_controller.setTransitionPhase( TransitionPhases.CANCELLED);
 				if( currentState != null )
 					currentSignalState.dispatchCancelled( cancellationReason, cachedPayload || payload );
 				return;
 			}
 
 			// teardown current state
-			if( currentState != null )
+			if( currentState != null ){
+				_controller.setTransitionPhase( TransitionPhases.EXITING_GUARD);
 				currentSignalState.dispatchTearDown();
+			}
 
 			setCurrentState( targetState );
 
 			// Send the notification configured to be sent when this specific state becomes current
+			_controller.setTransitionPhase( TransitionPhases.ENTERED);
 			currentSignalState.dispatchEntered( payload );
 
 		}
@@ -98,8 +107,14 @@ package org.osflash.statemachine.transitioning {
 		 */
 		override protected function dispatchGeneralStateChanged():void{
 			// Notify the app generally that the state changed and what the new state is
-			_controller.dispatchChanged( currentState );
+			_controller.setTransitionPhase( TransitionPhases.GLOBAL_CHANGED);
+			_controller.dispatchChanged( currentState.name );
+			 _controller.setTransitionPhase( TransitionPhases.NONE);
 		}
 
+		override protected function setIsTransitioning( value:Boolean ):void{
+			super.setIsTransitioning( value );
+			_controller.setIsTransition( value )
+		}
 	}
 }
