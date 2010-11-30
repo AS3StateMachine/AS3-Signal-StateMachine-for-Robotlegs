@@ -1,8 +1,8 @@
 package org.osflash.statemachine.supporting.cmds {
 	import org.robotlegs.mvcs.SignalCommand;
 
-	public class SignalCommandFour extends SignalCommand {
-	public function SignalCommandFour(){
+	public class CancelledCmd extends SignalCommand {
+	public function CancelledCmd(){
 		super();
 	}
 }

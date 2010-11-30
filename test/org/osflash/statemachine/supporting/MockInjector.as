@@ -16,6 +16,8 @@ package org.osflash.statemachine.supporting {
 		return stateMap[IState( useValue ).name] = ( useValue );
 	}
 
+	// all other methods empty
+
 	public function injectInto( target:Object ):void{
 		// do nothing
 	}
