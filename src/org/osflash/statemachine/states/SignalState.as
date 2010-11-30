@@ -9,6 +9,11 @@ package org.osflash.statemachine.states {
 	import org.osflash.signals.Signal;
 	import org.osflash.statemachine.base.BaseState;
 	import org.osflash.statemachine.core.ISignalState;
+	import org.osflash.statemachine.signals.Cancelled;
+	import org.osflash.statemachine.signals.Entered;
+	import org.osflash.statemachine.signals.EnteringGuard;
+	import org.osflash.statemachine.signals.ExitingGuard;
+	import org.osflash.statemachine.signals.TearDown;
 
 	/**
 	 * A SignalState defines five transition phases as Signals. 
@@ -53,7 +58,7 @@ package org.osflash.statemachine.states {
 		 * @inheritDoc
 		 */
 		public function get entered():ISignal{
-			if( _entered == null )_entered = new Signal( Object );
+			if( _entered == null )_entered = new Entered( );
 			return _entered;
 		}
 
@@ -61,7 +66,7 @@ package org.osflash.statemachine.states {
 		 * @inheritDoc
 		 */
 		public function get enteringGuard():ISignal{
-			if( _enteringGuard == null ) _enteringGuard = new Signal( Object );
+			if( _enteringGuard == null ) _enteringGuard = new EnteringGuard();
 			return _enteringGuard
 		}
 
@@ -69,7 +74,7 @@ package org.osflash.statemachine.states {
 		 * @inheritDoc
 		 */
 		public function get exitingGuard():ISignal{
-			if( _exitingGuard == null ) _exitingGuard = new Signal( Object );
+			if( _exitingGuard == null ) _exitingGuard = new ExitingGuard();
 			return _exitingGuard;
 		}
 
@@ -77,7 +82,7 @@ package org.osflash.statemachine.states {
 		 * @inheritDoc
 		 */
 		public function get cancelled():ISignal{
-			if( _cancelled == null ) _cancelled = new Signal( String, Object );
+			if( _cancelled == null ) _cancelled = new Cancelled();
 			return _cancelled;
 		}
 
@@ -85,7 +90,7 @@ package org.osflash.statemachine.states {
 		 * @inheritDoc
 		 */
 		public function get tearDown():ISignal{
-			if( _tearDown == null ) _tearDown = new Signal();
+			if( _tearDown == null ) _tearDown = new TearDown();
 			return _tearDown;
 		}
 
