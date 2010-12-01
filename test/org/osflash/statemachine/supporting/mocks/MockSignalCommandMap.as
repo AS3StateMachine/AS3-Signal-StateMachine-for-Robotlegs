@@ -1,4 +1,4 @@
-package org.osflash.statemachine.supporting {
+package org.osflash.statemachine.supporting.mocks {
 	import flash.utils.Dictionary;
 
 	import flash.utils.describeType;

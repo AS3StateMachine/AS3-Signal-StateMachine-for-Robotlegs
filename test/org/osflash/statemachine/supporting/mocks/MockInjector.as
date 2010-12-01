@@ -1,4 +1,4 @@
-package org.osflash.statemachine.supporting {
+package org.osflash.statemachine.supporting.mocks {
 	import flash.system.ApplicationDomain;
 
 	import org.osflash.statemachine.core.IState;
