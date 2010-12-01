@@ -148,11 +148,12 @@ package org.osflash.statemachine.states {
 		 * The destroy method for gc
 		 */
 		override public function destroy():void{
-			_entered.removeAll();
-			_enteringGuard.removeAll();
-			_exitingGuard.removeAll();
-			_tearDown.removeAll();
-			_cancelled.removeAll();
+			
+			if(_entered != null) _entered.removeAll();
+			if(_enteringGuard != null) _enteringGuard.removeAll();
+			if(_exitingGuard != null) _exitingGuard.removeAll();
+			if(_tearDown != null) _tearDown.removeAll();
+			if(_cancelled != null) _cancelled.removeAll();
 
 			_entered = null;
 			_enteringGuard = null;
