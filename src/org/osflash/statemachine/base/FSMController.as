@@ -4,6 +4,9 @@ package org.osflash.statemachine.base {
 	import org.osflash.statemachine.core.IFSMControllerOwner;
 	import org.osflash.statemachine.core.IState;
 	import org.osflash.statemachine.errors.StateTransitionError;
+	import org.osflash.statemachine.signals.Action;
+	import org.osflash.statemachine.signals.Cancel;
+	import org.osflash.statemachine.signals.Changed;
 	import org.osflash.statemachine.transitioning.TransitionPhases;
 
 	/**
@@ -66,9 +69,9 @@ package org.osflash.statemachine.base {
 		 * Creates a new instance of FSMController
 		 */
 		public function FSMController(){
-			_action = new Signal( String, Object );
-			_cancel = new Signal( String, Object );
-			_changed = new Signal( String );
+			_action = new Action( );
+			_cancel = new Cancel( );
+			_changed = new Changed( );
 		}
 
 		/**
