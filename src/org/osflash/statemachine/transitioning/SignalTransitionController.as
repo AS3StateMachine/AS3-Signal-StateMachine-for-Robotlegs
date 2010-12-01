@@ -41,7 +41,7 @@ package org.osflash.statemachine.transitioning {
 		 * @inheritDoc
 		 */
 		override public function destroy():void{
-			_controller.destroy();
+			if(_controller!=null)_controller.destroy();
 			_controller = null;
 			super.destroy();
 		}
