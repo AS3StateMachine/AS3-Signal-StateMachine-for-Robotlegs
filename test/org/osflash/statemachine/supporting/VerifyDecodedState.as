@@ -7,6 +7,8 @@ package org.osflash.statemachine.supporting {
 	import org.osflash.statemachine.signals.EnteringGuard;
 	import org.osflash.statemachine.signals.ExitingGuard;
 	import org.osflash.statemachine.signals.TearDown;
+	import org.osflash.statemachine.supporting.mocks.MockInjector;
+	import org.osflash.statemachine.supporting.mocks.MockSignalCommandMap;
 	import org.robotlegs.core.IInjector;
 	import org.robotlegs.core.ISignalCommandMap;
 

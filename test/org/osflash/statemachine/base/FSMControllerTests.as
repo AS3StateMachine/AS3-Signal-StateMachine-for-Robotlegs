@@ -1,6 +1,7 @@
 package org.osflash.statemachine.base {
 	import flexunit.framework.Assert;
 
+	import org.osflash.statemachine.supporting.mocks.MockSignalListener;
 	import org.osflash.statemachine.transitioning.TransitionPhases;
 
 	public class FSMControllerTests {
@@ -92,7 +93,7 @@ package org.osflash.statemachine.base {
 
 			var info:String = "actionName";
 			var payload:Object = {};
-			var mockListener:MockListener = new MockListener( info, payload);
+			var mockListener:MockSignalListener = new MockSignalListener( info, payload);
 
 			fsmController.setIsTransition( false );
 			fsmController.addActionListener( mockListener.listenerOne );
@@ -107,7 +108,7 @@ package org.osflash.statemachine.base {
 
 			var info:String = "actionName";
 			var payload:Object = {};
-			var mockListener:MockListener = new MockListener( info, payload);
+			var mockListener:MockSignalListener = new MockSignalListener( info, payload);
 
 			fsmController.setIsTransition( true );
 			fsmController.addActionListener( mockListener.listenerOne );
@@ -122,7 +123,7 @@ package org.osflash.statemachine.base {
 
 			var info:String = "actionName";
 			var payload:Object = {};
-			var mockListener:MockListener = new MockListener( info, payload);
+			var mockListener:MockSignalListener = new MockSignalListener( info, payload);
 
 			fsmController.setIsTransition( true );
 			fsmController.addActionListener( mockListener.listenerOne );
@@ -193,7 +194,7 @@ package org.osflash.statemachine.base {
 		public function addChangedListener_AddingChangedListenerThenDispatchingChangedSignal_ReturnsTrue():void{
 
 			var info:String = "state/test";
-			var mockListener:MockListener = new MockListener( info, null );
+			var mockListener:MockSignalListener = new MockSignalListener( info, null );
 
 			fsmController.addChangedListener( mockListener.listenerTwo );
 			fsmController.dispatchChanged( info );
@@ -206,7 +207,7 @@ package org.osflash.statemachine.base {
 		public function addChangedListener_AddingChangedListenerThenDispatchingChangedSignalTwice_ReturnsTrue():void{
 
 			var info:String = "state/test";
-			var mockListener:MockListener = new MockListener( info, null );
+			var mockListener:MockSignalListener = new MockSignalListener( info, null );
 
 			fsmController.addChangedListener( mockListener.listenerTwo );
 			fsmController.dispatchChanged( info );
@@ -221,7 +222,7 @@ package org.osflash.statemachine.base {
 		public function removeChangedListener_AddingChangedListenerThenRemovingListener_ReturnsFalse():void{
 
 			var info:String = "state/test";
-			var mockListener:MockListener = new MockListener( info, null );
+			var mockListener:MockSignalListener = new MockSignalListener( info, null );
 
 			fsmController.addChangedListener( mockListener.listenerTwo );
 			fsmController.removeChangedListener( mockListener.listenerTwo);
@@ -235,7 +236,7 @@ package org.osflash.statemachine.base {
 		public function addChangedListenerOnce_AddingChangedListenerOnceThenDispatchingChangedSignal_ReturnsTrue():void{
 
 			var info:String = "state/test";
-			var mockListener:MockListener = new MockListener( info, null );
+			var mockListener:MockSignalListener = new MockSignalListener( info, null );
 
 			fsmController.addChangedListenerOnce( mockListener.listenerTwo );
 			fsmController.dispatchChanged( info );
@@ -248,7 +249,7 @@ package org.osflash.statemachine.base {
 		public function addChangedListenerOnce_AddingChangedListenerOnceThenDispatchingChangedSignalTwice_ReturnsFalse():void{
 
 			var info:String = "state/test";
-			var mockListener:MockListener = new MockListener( info, null );
+			var mockListener:MockSignalListener = new MockSignalListener( info, null );
 
 			fsmController.addChangedListenerOnce( mockListener.listenerTwo );
 			fsmController.dispatchChanged( info );
@@ -259,30 +260,5 @@ package org.osflash.statemachine.base {
 
 		}
 
-	}
-}
-
-internal class MockListener{
-
-	public var conclusion:Boolean;
-
-	private var payload:Object;
-	private var info:String;
-
-	public function MockListener( info:String, payload:Object ){
-		this.payload = payload;
-		this.info = info;
-	}
-
-	public function listenerOne( info:String, payload:Object ):void{
-		conclusion = ( this.info == info && this.payload === payload )
-	}
-
-	public function listenerTwo( info:String ):void{
-		conclusion = ( this.info == info )
-	}
-
-	public function reset():void{
-		conclusion = false;
 	}
 }

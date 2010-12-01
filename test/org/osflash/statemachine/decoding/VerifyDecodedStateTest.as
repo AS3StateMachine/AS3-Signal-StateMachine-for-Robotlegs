@@ -8,8 +8,8 @@ package org.osflash.statemachine.decoding {
 	import org.osflash.statemachine.signals.EnteringGuard;
 	import org.osflash.statemachine.signals.TearDown;
 	import org.osflash.statemachine.states.SignalState;
-	import org.osflash.statemachine.supporting.MockInjector;
-	import org.osflash.statemachine.supporting.MockSignalCommandMap;
+	import org.osflash.statemachine.supporting.mocks.MockInjector;
+	import org.osflash.statemachine.supporting.mocks.MockSignalCommandMap;
 	import org.osflash.statemachine.supporting.VerifyDecodedState;
 	import org.osflash.statemachine.supporting.cmds.CancelledCmd;
 	import org.osflash.statemachine.supporting.cmds.EnteredCmd;
