@@ -28,6 +28,25 @@ package org.osflash.statemachine.transitioning {
 		}
 
 		[Test]
+		public function transition_StateNameIsCurrentStateBeforeTransition_ReturnsTrue():void{
+
+			Assert.assertTrue(
+					"The transitionController.currentState property should be the currentState",
+					transitionController.currentState === currentState );
+		}
+
+		[Test]
+		public function transition_StateNameIsTargetStateAfterTransition_ReturnsTrue():void{
+
+			var mockListener:MockTransitionListener = new MockTransitionListener( payload, transitionController );
+			transitionController.transition( targetState, payload );
+
+			Assert.assertTrue(
+					"The transitionController.currentState property should be the currentState",
+					transitionController.currentState === targetState );
+		}
+
+		[Test]
 		public function transition_CallingCurrentStateOnExitingGuard_ReturnsTrueTrueTrue():void{
 
 			var mockListener:MockTransitionListener = new MockTransitionListener( payload, transitionController );
