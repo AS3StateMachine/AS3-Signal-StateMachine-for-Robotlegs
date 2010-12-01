@@ -105,7 +105,7 @@ package org.osflash.statemachine.decoding {
 		 * @param name this can either be the name, the fully qualified name or an instance of the Class
 		 * @return the class reference
 		 */
-		protected function getCommandClass( name:Object ):Class{
+		public function getCommandClass( name:Object ):Class{
 			for each ( var cb:ClassBag in classBagMap ){
 				if( cb.equals( name ) ) return cb.payload;
 			}
