@@ -13,11 +13,19 @@ public class MockSignalListener{
 	}
 
 	public function listenerOne( info:String, payload:Object ):void{
-		conclusion = ( this.info == info && this.payload === payload )
+		conclusion = ( this.info == info && this.payload === payload );
 	}
 
 	public function listenerTwo( info:String ):void{
-		conclusion = ( this.info == info )
+		conclusion = ( this.info == info );
+	}
+
+	public function listenerThree( payload:Object ):void{
+		conclusion = ( this.payload == payload );
+	}
+
+	public function listenerFour():void{
+		conclusion = true;
 	}
 
 	public function reset():void{
