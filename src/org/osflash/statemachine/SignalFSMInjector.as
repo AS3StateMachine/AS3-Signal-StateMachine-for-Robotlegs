@@ -87,7 +87,7 @@ package org.osflash.statemachine {
 		 * @return
 		 */
 		public function hasCommandClass( name:Object ):Boolean{
-			return _decoder.hasCommandClass( name );p
+			return _decoder.hasCommandClass( name );
 		}
 
 		/**
