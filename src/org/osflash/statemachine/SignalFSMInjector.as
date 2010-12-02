@@ -81,6 +81,16 @@ package org.osflash.statemachine {
 		}
 
 		/**
+		 * Test to determine whether a particular class has already been added
+		 * to the decoder
+		 * @param name this can either be the name, the fully qualified name or an instance of the Class
+		 * @return
+		 */
+		public function hasCommandClass( name:Object ):Boolean{
+			return _decoder.hasCommandClass( name );p
+		}
+
+		/**
 		 * Injects the StateMachine
 		 */
 		public function inject():void{
