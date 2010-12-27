@@ -163,5 +163,25 @@ package org.osflash.statemachine.states {
 
 			super.destroy();
 		}
+
+		public function get hasEntered():Boolean{
+			return ( _entered != null);
+		}
+
+		public function get hasEnteringGuard():Boolean{
+			return ( _enteringGuard != null);
+		}
+
+		public function get hasExitingGuard():Boolean{
+			return ( _exitingGuard != null);
+		}
+
+		public function get hasCancelled():Boolean{
+			return ( _cancelled != null);
+		}
+
+		public function get hasTearDown():Boolean{
+			return ( _tearDown != null);
+		}
 	}
 }

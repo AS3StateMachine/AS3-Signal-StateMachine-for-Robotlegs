@@ -1,6 +1,7 @@
 package org.osflash.statemachine {
 	import org.osflash.statemachine.core.IFSMController;
 	import org.osflash.statemachine.core.IFSMInjector;
+	import org.osflash.statemachine.core.IStateLogger;
 	import org.osflash.statemachine.core.IStateMachine;
 	import org.osflash.statemachine.decoding.SignalXMLStateDecoder;
 	import org.osflash.statemachine.transitioning.SignalTransitionController;
@@ -58,7 +59,7 @@ package org.osflash.statemachine {
 		 * Initiates the Injector
 		 * @param stateDefinition the StateMachine declaration
 		 */
-		public function initiate( stateDefinition:XML ):void{
+		public function initiate( stateDefinition:XML, debug:Boolean=false, logger:IStateLogger=null ):void{
 			// create a SignalStateDecoder and pass it the State Declaration
 			_decoder = new SignalXMLStateDecoder( stateDefinition, _injector, _signalCommandMap );
 			// add it the FSMInjector
@@ -66,7 +67,7 @@ package org.osflash.statemachine {
 			// create a transitionController
 			_transitionController = new SignalTransitionController();
 			// and pass it to the StateMachine
-			_stateMachine = new StateMachine( _transitionController );
+			_stateMachine = new StateMachine( _transitionController, debug, logger );
 		}
 
 		/**
@@ -94,16 +95,19 @@ package org.osflash.statemachine {
 		 * Injects the StateMachine
 		 */
 		public function inject():void{
+
+			// inject the statemachine (mainly to make sure that it doesn't get GCd )
+			_injector.mapValue( IStateMachine, _stateMachine );
+			// inject the fsmController to allow actors to control fsm
+			_injector.mapValue( IFSMController, _transitionController.fsmController );
+			
 			// inject the statemachine, it will proceed to the initial state.
 			// NB no injection rules have been set for view or model yet, the initial state
 			// should be a resting one and the next state should be triggered by the
 			// onApplicationComplete event in the ApplicationMediator
 			_fsmInjector.inject( _stateMachine );
 
-			// inject the statemachine (mainly to make sure that it doesn't get GCd )
-			_injector.mapValue( IStateMachine, _stateMachine );
-			// inject the fsmController to allow actors to control fsm
-			_injector.mapValue( IFSMController, _transitionController.fsmController );
+
 
 
 		}

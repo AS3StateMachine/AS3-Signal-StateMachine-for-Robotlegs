@@ -54,43 +54,44 @@ package org.osflash.statemachine.transitioning {
 			var targetState:SignalState = SignalState( target );
 
 			// Exit the current State
-			if( currentState != null ){
+			if( currentState != null && currentSignalState.hasExitingGuard ){
 				_controller.setTransitionPhase( TransitionPhases.EXITING_GUARD);
+				log("CURRENT STATE: " + currentState.name + ", PHASE DISPATCHED: " + TransitionPhases.EXITING_GUARD);
 				currentSignalState.dispatchExitingGuard( payload );
 			}
 
 
 			// Check to see whether the exiting guard has been canceled
-			if( isCanceled  ){
-				_controller.setTransitionPhase( TransitionPhases.CANCELLED);
-				if( currentState != null )
-					currentSignalState.dispatchCancelled( cancellationReason, cachedPayload || payload );
-				return;
-			}
+			if( isCanceled  )return;
 
 			// Enter the next State
-			_controller.setTransitionPhase( TransitionPhases.ENTERING_GUARD);
-			targetState.dispatchEnteringGuard( payload );
+			if( targetState.hasEnteringGuard ){
+				_controller.setTransitionPhase( TransitionPhases.ENTERING_GUARD);
+				log("TARGET STATE: " + targetState.name +  ", PHASE DISPATCHED: " + TransitionPhases.ENTERING_GUARD);
+				targetState.dispatchEnteringGuard( payload );
+			}
 
 			// Check to see whether the entering guard has been canceled
 			if( isCanceled ){
-				_controller.setTransitionPhase( TransitionPhases.CANCELLED);
-				if( currentState != null )
-					currentSignalState.dispatchCancelled( cancellationReason, cachedPayload || payload );
 				return;
 			}
 
 			// teardown current state
-			if( currentState != null ){
-				_controller.setTransitionPhase( TransitionPhases.EXITING_GUARD);
+			if( currentState != null && currentSignalState.hasTearDown ){
+				_controller.setTransitionPhase( TransitionPhases.TEAR_DOWN);
+				log("CURRENT STATE: " + currentState.name +  ", PHASE DISPATCHED: " + TransitionPhases.TEAR_DOWN);
 				currentSignalState.dispatchTearDown();
 			}
 
 			setCurrentState( targetState );
+			log("CURRENT STATE CHANGED: " + currentState.name );
 
 			// Send the notification configured to be sent when this specific state becomes current
-			_controller.setTransitionPhase( TransitionPhases.ENTERED);
-			currentSignalState.dispatchEntered( payload );
+			if( currentSignalState.hasEntered ){
+				_controller.setTransitionPhase( TransitionPhases.ENTERED);
+				log("CURRENT STATE: " + currentState.name +  ", PHASE DISPATCHED: " + TransitionPhases.ENTERED);
+				currentSignalState.dispatchEntered( payload );
+			}
 
 		}
 
@@ -106,15 +107,28 @@ package org.osflash.statemachine.transitioning {
 		 * @inheritDoc
 		 */
 		override protected function dispatchGeneralStateChanged():void{
-			// Notify the app generally that the state changed and what the new state is
-			_controller.setTransitionPhase( TransitionPhases.GLOBAL_CHANGED);
-			_controller.dispatchChanged( currentState.name );
-			 _controller.setTransitionPhase( TransitionPhases.NONE);
+			// Notify the app generally th  at the state changed and what the new state is
+			if( _controller.hasChangedListener ){
+				_controller.setTransitionPhase( TransitionPhases.GLOBAL_CHANGED);
+				log( "PHASE DISPATCHED: " + TransitionPhases.GLOBAL_CHANGED );
+				_controller.dispatchChanged( currentState.name );
+			}
+			_controller.setTransitionPhase( TransitionPhases.NONE);
+		}
+
+		override protected function dispatchCancelled():void{
+				if( currentState != null && currentSignalState.hasCancelled ){
+					_controller.setTransitionPhase( TransitionPhases.CANCELLED);
+					log( "CURRENT STATE: " + currentState.name +  ", PHASE DISPATCHED: " + TransitionPhases.CANCELLED);
+					currentSignalState.dispatchCancelled( cancellationReason, cachedPayload );
+				}
+			_controller.setTransitionPhase( TransitionPhases.NONE);
 		}
 
 		override protected function setIsTransitioning( value:Boolean ):void{
 			super.setIsTransitioning( value );
 			_controller.setIsTransition( value )
 		}
+
 	}
 }

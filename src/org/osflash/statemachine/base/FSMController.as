@@ -239,5 +239,9 @@ package org.osflash.statemachine.base {
 		public function setTransitionPhase( value:String ):void{
 			_transitionPhase = value;
 		}
+
+		public function get hasChangedListener():Boolean{
+			return (_changed.numListeners > 0 );
+		}
 	}
 }

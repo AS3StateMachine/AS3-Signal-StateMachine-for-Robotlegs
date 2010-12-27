@@ -5,6 +5,9 @@ package org.osflash.statemachine.core {
 	 * SignalTransitionController
 	 */
 	public interface IFSMControllerOwner {
+
+		function get hasChangedListener(  ):Boolean;
+
 		/**
 		 * Allows the SignalTransitionController to listen to framework action requests.
 		 * @param listener the method to handle the action request
@@ -24,7 +27,8 @@ package org.osflash.statemachine.core {
 		 * listeners.
 		 * @param state the current state.
 		 */
-		function dispatchChanged( stateName:String ):void
+		function dispatchChanged( stateName:String ):void;
+
 
 		/**
 		 * Sets the current state when the transition has been successful
