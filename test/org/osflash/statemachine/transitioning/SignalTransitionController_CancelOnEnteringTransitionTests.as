@@ -81,7 +81,7 @@ package org.osflash.statemachine.transitioning {
 		}
 
 		[Test]
-		public function transition_CallingCurrentStateCancelled_ReturnsTrueTrueTrue():void{
+		public function transition_CallingCurrentStateCancelled_ReturnsTrueTrueFalse():void{
 
 			var mockListener:MockTransitionListener = new MockTransitionListener(
 					MockTransitionListener.CANCELLED_PAYLOAD,
@@ -93,10 +93,10 @@ package org.osflash.statemachine.transitioning {
 			transitionController.transition( targetState, payload );
 
 			Assert.assertTrue(
-					"The CurrentState's Cancel Listener should not have been called, should be: true, true, true",
+					"The CurrentState's Cancel Listener should not have been called, should be: true, true, false",
 					mockListener.hasListenerBeenCalled &&
 							mockListener.parameterTest &&
-							mockListener.isTransitioning );
+							!mockListener.isTransitioning );
 		}
 
 		[Test]

@@ -201,8 +201,8 @@ package org.osflash.statemachine.decoding {
 					exitingGuard="ExitingGuardCmd" entered="EnteredCmd"
 					teardown="TearDownCmd" cancelled="CancelledCmd">
 						<transition action="action/one" target={"state/one"}/>
-						<transition action={"action/two"} target={"state/two"}/>
-						<transition action={"action/three"} target={"state/three"}/>
+						<transition action="action/two" target={"state/two"}/>
+						<transition action="action/three" target={"state/three"}/>
 					</state>;
 
 			signalStateDecoder.addCommandClass( EnteringGuardCmd );
