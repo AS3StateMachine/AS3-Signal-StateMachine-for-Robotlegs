@@ -1,7 +1,6 @@
 package org.osflash.statemachine.decoding {
 
 	import org.osflash.signals.ISignal;
-	import org.osflash.statemachine.base.BaseState;
 	import org.osflash.statemachine.base.BaseXMLStateDecoder;
 	import org.osflash.statemachine.core.ISignalState;
 	import org.osflash.statemachine.core.IState;
@@ -38,6 +37,7 @@ package org.osflash.statemachine.decoding {
 		 * @private
 		 */
 		protected var signalCommandMap:ISignalCommandMap;
+		protected var errors:Array;
 
 		/**
 		 * Creates an instance of a SignalXMLStateDecoder
@@ -48,6 +48,7 @@ package org.osflash.statemachine.decoding {
 		public function SignalXMLStateDecoder( fsm:XML, injector:IInjector, signalCommandMap:ISignalCommandMap ):void{
 			this.injector = injector;
 			this.signalCommandMap = signalCommandMap;
+			errors = [];
 			super( fsm );
 		}
 
@@ -67,9 +68,10 @@ package org.osflash.statemachine.decoding {
 		 * @inheritDoc
 		 */
 		override public function destroy():void{
+			errors = null;
 			injector = null;
 			signalCommandMap = null;
-			if( classBagMap != null){
+			if( classBagMap != null ){
 				for each ( var cb:ClassBag in classBagMap )	cb.destroy();
 			}
 			classBagMap = null;
@@ -94,7 +96,7 @@ package org.osflash.statemachine.decoding {
 		 * Test to determine whether a particular class has already been added
 		 * to the decoder
 		 * @param name this can either be the name, the fully qualified name or an instance of the Class
-		 * @return 
+		 * @return
 		 */
 		public function hasCommandClass( name:Object ):Boolean{
 			return ( getCommandClass( name ) != null );
@@ -155,36 +157,50 @@ package org.osflash.statemachine.decoding {
 		 */
 		protected function mapSignals( signalState:ISignalState, stateDef:Object ):void{
 
-			var exitingGuard:String = stateDef.@exitingGuard.toString();
-			var enteringGuard:String = stateDef.@enteringGuard.toString();
-			var entered:String = stateDef.@entered.toString();
-			var tearDown:String = stateDef.@teardown.toString();
-			var cancelled:String = stateDef.@cancelled.toString();
+			var exitingGuard:Array =
+					(stateDef.@exitingGuard != undefined )
+							? stateDef.@exitingGuard.toString().split( "," )
+							: null;
 
-			if( exitingGuard != "" )
-				mapSignalCommand( signalState.exitingGuard, exitingGuard );
+			var enteringGuard:Array =
+					(stateDef.@enteringGuard != undefined )
+							? stateDef.@enteringGuard.toString().split( "," )
+							: null;
 
-			if( enteringGuard != "" )
-				mapSignalCommand( signalState.enteringGuard, enteringGuard );
+			var entered:Array =
+					(stateDef.@entered != undefined )
+							? stateDef.@entered.toString().split( "," )
+							: null;
 
-			if( entered != "" )
-				mapSignalCommand( signalState.entered, entered );
+			var tearDown:Array =
+					(stateDef.@teardown != undefined )
+							? stateDef.@teardown.toString().split( "," )
+							: null;
 
-			if( tearDown != "" )
-				mapSignalCommand( signalState.tearDown, tearDown );
+			var cancelled:Array =
+					(stateDef.@cancelled != undefined )
+							? stateDef.@cancelled.toString().split( "," )
+							: null;
 
-			if( cancelled != "" )
-				mapSignalCommand( signalState.cancelled, cancelled );
+			mapSignalCommand( signalState.exitingGuard, exitingGuard );
+			mapSignalCommand( signalState.enteringGuard, enteringGuard );
+			mapSignalCommand( signalState.entered, entered );
+			mapSignalCommand( signalState.tearDown, tearDown );
+			mapSignalCommand( signalState.cancelled, cancelled );
 
+			if( errors.length > 0 )throw new UnregisteredSignalCommandError( errors.toString() );
 		}
 
 		/**
 		 * @private
 		 */
-		private function mapSignalCommand( signal:ISignal, commandClassName:String ):void{
-			var c:Class = getCommandClass( commandClassName );
-			if( c == null )throw new UnregisteredSignalCommandError( commandClassName );
-			signalCommandMap.mapSignal( signal, c );
+		private function mapSignalCommand( signal:ISignal, commandClassNames:Array ):void{
+			if( commandClassNames == null )return;
+			for each ( var name:String in commandClassNames ){
+				var c:Class = getCommandClass( name );
+				if( c == null ) errors.push( name );
+				else signalCommandMap.mapSignal( signal, c );
+			}
 		}
 
 	}
