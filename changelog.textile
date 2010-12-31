@@ -1,18 +1,32 @@
 h2. Change log
 
+h3. AS3-Signal-StateMachine-for-Robotlegs-V0-3-000: 31/12/2010
+
+* SignalTransitionController: Added logging (see Base v 1.2.000).
+* SignalTransitionController: Extracted Cancelled-Phase dispatching
+  from onTransition to dispatchCancelled method (see Base v 1.2.000).
+  This prevents circular cancellations.
+* SignalXMLStateDecoder: mapSignals method now allows mapping of
+  many Commands to one Signal by delimiting attribute declarations
+  with a comma.
+* ISignalState: Added property checking so Signals are not lazily
+  instantiated by getter.
+* SignalState: Implements changes to ISignalState.
+
+
 h3. AS3-Signal-StateMachine-for-Robotlegs-V0-2-000: 2/12/2010
 
 * FSMController: Added StateTransitionError Throwing for when
-  actioning or cancelling transitions from inappropriate phases
+  actioning or cancelling transitions from inappropriate phases.
 * FSMController: If a transition is actioned during a permitted
   transition phase, then the action is scheduled to be sent
-  immediately the transition cycle is over
+  immediately the transition cycle is over.
 * SignalTransitionController: overriden isTransitioning setter
-  to pass value on to FSMController
+  to pass value on to FSMController.
 * SignalTransitionController: sets FSMController's transitionPhase
-  property during transition() method
+  property during transition() method.
 * TransitionPhases: Const Class for FSMController's transitionPhase
-  property
+  property.
 * Reinstated Extended Signals for better type checking in tests.
 
 h3. AS3-Signal-StateMachine-for-Robotlegs-V0-1-001: 18/11/2010
