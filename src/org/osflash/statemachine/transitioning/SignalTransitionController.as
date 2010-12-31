@@ -2,6 +2,7 @@ package org.osflash.statemachine.transitioning {
 	import org.osflash.statemachine.base.*;
 	import org.osflash.statemachine.core.IFSMController;
 	import org.osflash.statemachine.core.IFSMControllerOwner;
+	import org.osflash.statemachine.core.ILoggable;
 	import org.osflash.statemachine.core.IState;
 	import org.osflash.statemachine.states.SignalState;
 
@@ -21,7 +22,8 @@ package org.osflash.statemachine.transitioning {
 		 * @param controller the object that acts as comms-bus
 		 * between the SignalTransitionController and the framework actors.
 		 */
-		public function SignalTransitionController( controller:IFSMControllerOwner = null ){
+		public function SignalTransitionController( controller:IFSMControllerOwner = null, logger:ILoggable = null ){
+			super(logger);
 			_controller = controller || new FSMController();
 			_controller.addActionListener( handleAction );
 			_controller.addCancelListener( handleCancel );
@@ -115,7 +117,9 @@ package org.osflash.statemachine.transitioning {
 			}
 			_controller.setTransitionPhase( TransitionPhases.NONE);
 		}
-
+		/**
+		 * @inheritDoc
+		 */
 		override protected function dispatchCancelled():void{
 				if( currentState != null && currentSignalState.hasCancelled ){
 					_controller.setTransitionPhase( TransitionPhases.CANCELLED);
