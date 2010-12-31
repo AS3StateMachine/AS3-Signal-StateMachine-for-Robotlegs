@@ -1,7 +1,7 @@
 package org.osflash.statemachine {
 	import org.osflash.statemachine.core.IFSMController;
 	import org.osflash.statemachine.core.IFSMInjector;
-	import org.osflash.statemachine.core.IStateLogger;
+	import org.osflash.statemachine.core.ILoggable;
 	import org.osflash.statemachine.core.IStateMachine;
 	import org.osflash.statemachine.decoding.SignalXMLStateDecoder;
 	import org.osflash.statemachine.transitioning.SignalTransitionController;
@@ -59,15 +59,15 @@ package org.osflash.statemachine {
 		 * Initiates the Injector
 		 * @param stateDefinition the StateMachine declaration
 		 */
-		public function initiate( stateDefinition:XML, debug:Boolean=false, logger:IStateLogger=null ):void{
+		public function initiate( stateDefinition:XML, logger:ILoggable=null ):void{
 			// create a SignalStateDecoder and pass it the State Declaration
 			_decoder = new SignalXMLStateDecoder( stateDefinition, _injector, _signalCommandMap );
 			// add it the FSMInjector
 			_fsmInjector = new FSMInjector( _decoder );
 			// create a transitionController
-			_transitionController = new SignalTransitionController();
+			_transitionController = new SignalTransitionController( null, logger );
 			// and pass it to the StateMachine
-			_stateMachine = new StateMachine( _transitionController, debug, logger );
+			_stateMachine = new StateMachine( _transitionController, logger );
 		}
 
 		/**
