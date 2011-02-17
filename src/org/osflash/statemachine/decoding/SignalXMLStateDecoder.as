@@ -182,11 +182,11 @@ package org.osflash.statemachine.decoding {
 							? stateDef.@cancelled.toString().split( "," )
 							: null;
 
-			mapSignalCommand( signalState.exitingGuard, exitingGuard );
-			mapSignalCommand( signalState.enteringGuard, enteringGuard );
-			mapSignalCommand( signalState.entered, entered );
-			mapSignalCommand( signalState.tearDown, tearDown );
-			mapSignalCommand( signalState.cancelled, cancelled );
+			if( exitingGuard != null ) mapSignalCommand( signalState.exitingGuard, exitingGuard );
+			if( enteringGuard != null ) mapSignalCommand( signalState.enteringGuard, enteringGuard );
+			if( entered != null ) mapSignalCommand( signalState.entered, entered );
+			if( tearDown != null ) mapSignalCommand( signalState.tearDown, tearDown );
+			if( cancelled != null ) mapSignalCommand( signalState.cancelled, cancelled );
 
 			if( errors.length > 0 )throw new UnregisteredSignalCommandError( errors.toString() );
 		}
@@ -195,7 +195,6 @@ package org.osflash.statemachine.decoding {
 		 * @private
 		 */
 		private function mapSignalCommand( signal:ISignal, commandClassNames:Array ):void{
-			if( commandClassNames == null )return;
 			for each ( var name:String in commandClassNames ){
 				var c:Class = getCommandClass( name );
 				if( c == null ) errors.push( name );
