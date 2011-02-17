@@ -43,8 +43,7 @@ package org.osflash.statemachine.transitioning {
 		 * @inheritDoc
 		 */
 		override public function destroy():void{
-			if(_controller!=null)_controller.destroy();
-			_controller = null;
+			_controller.destroy();
 			super.destroy();
 		}
 
@@ -55,10 +54,12 @@ package org.osflash.statemachine.transitioning {
 
 			var targetState:SignalState = SignalState( target );
 
+			setReferringAction( );
+
 			// Exit the current State
 			if( currentState != null && currentSignalState.hasExitingGuard ){
-				_controller.setTransitionPhase( TransitionPhases.EXITING_GUARD);
-				log("CURRENT STATE: " + currentState.name + ", PHASE DISPATCHED: " + TransitionPhases.EXITING_GUARD);
+				_controller.setTransitionPhase( TransitionPhase.EXITING_GUARD);
+				logPhase( TransitionPhase.EXITING_GUARD, currentState.name);
 				currentSignalState.dispatchExitingGuard( payload );
 			}
 
@@ -68,8 +69,8 @@ package org.osflash.statemachine.transitioning {
 
 			// Enter the next State
 			if( targetState.hasEnteringGuard ){
-				_controller.setTransitionPhase( TransitionPhases.ENTERING_GUARD);
-				log("TARGET STATE: " + targetState.name +  ", PHASE DISPATCHED: " + TransitionPhases.ENTERING_GUARD);
+				_controller.setTransitionPhase( TransitionPhase.ENTERING_GUARD);
+				logPhase( TransitionPhase.ENTERING_GUARD, targetState.name);
 				targetState.dispatchEnteringGuard( payload );
 			}
 
@@ -80,21 +81,26 @@ package org.osflash.statemachine.transitioning {
 
 			// teardown current state
 			if( currentState != null && currentSignalState.hasTearDown ){
-				_controller.setTransitionPhase( TransitionPhases.TEAR_DOWN);
-				log("CURRENT STATE: " + currentState.name +  ", PHASE DISPATCHED: " + TransitionPhases.TEAR_DOWN);
+				_controller.setTransitionPhase( TransitionPhase.TEAR_DOWN);
+				logPhase( TransitionPhase.TEAR_DOWN, currentState.name);
 				currentSignalState.dispatchTearDown();
 			}
 
 			setCurrentState( targetState );
-			log("CURRENT STATE CHANGED: " + currentState.name );
+			log("CURRENT STATE CHANGED TO: " + currentState.name );
 
 			// Send the notification configured to be sent when this specific state becomes current
 			if( currentSignalState.hasEntered ){
-				_controller.setTransitionPhase( TransitionPhases.ENTERED);
-				log("CURRENT STATE: " + currentState.name +  ", PHASE DISPATCHED: " + TransitionPhases.ENTERED);
+				_controller.setTransitionPhase( TransitionPhase.ENTERED);
+				logPhase(TransitionPhase.ENTERED, currentState.name);
 				currentSignalState.dispatchEntered( payload );
 			}
 
+		}
+
+		private function setReferringAction(  ):void{
+			if( currentState == null )return;
+			_controller.setReferringAction( currentState.referringAction );
 		}
 
 		/**
@@ -111,27 +117,27 @@ package org.osflash.statemachine.transitioning {
 		override protected function dispatchGeneralStateChanged():void{
 			// Notify the app generally th  at the state changed and what the new state is
 			if( _controller.hasChangedListener ){
-				_controller.setTransitionPhase( TransitionPhases.GLOBAL_CHANGED);
-				log( "PHASE DISPATCHED: " + TransitionPhases.GLOBAL_CHANGED );
+				_controller.setTransitionPhase( TransitionPhase.GLOBAL_CHANGED);
+				logPhase(TransitionPhase.GLOBAL_CHANGED );
 				_controller.dispatchChanged( currentState.name );
 			}
-			_controller.setTransitionPhase( TransitionPhases.NONE);
+			_controller.setTransitionPhase( TransitionPhase.NONE);
 		}
 		/**
 		 * @inheritDoc
 		 */
 		override protected function dispatchCancelled():void{
 				if( currentState != null && currentSignalState.hasCancelled ){
-					_controller.setTransitionPhase( TransitionPhases.CANCELLED);
-					log( "CURRENT STATE: " + currentState.name +  ", PHASE DISPATCHED: " + TransitionPhases.CANCELLED);
+					_controller.setTransitionPhase( TransitionPhase.CANCELLED);
+					logPhase( TransitionPhase.CANCELLED,  currentState.name);
 					currentSignalState.dispatchCancelled( cancellationReason, cachedPayload );
 				}
-			_controller.setTransitionPhase( TransitionPhases.NONE);
+			_controller.setTransitionPhase( TransitionPhase.NONE);
 		}
 
 		override protected function setIsTransitioning( value:Boolean ):void{
 			super.setIsTransitioning( value );
-			_controller.setIsTransition( value )
+				_controller.setIsTransition( value );
 		}
 
 	}
