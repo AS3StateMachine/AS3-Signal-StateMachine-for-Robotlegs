@@ -10,6 +10,11 @@ package org.osflash.statemachine.core {
 		function get currentStateName():String;
 
 		/**
+		 * The name of the referring action.
+		 */
+		function get referringAction():String;
+
+		/**
 		 * Indicates whether the StateMachine is undergoing a transition cycle.
 		 */
 		function get isTransitioning():Boolean;
@@ -58,6 +63,7 @@ package org.osflash.statemachine.core {
 		 * @return the listener Function passed as the parameter
 		 */
 		function removeChangedListener( listener:Function ):Function;
+
 
 	}
 }
