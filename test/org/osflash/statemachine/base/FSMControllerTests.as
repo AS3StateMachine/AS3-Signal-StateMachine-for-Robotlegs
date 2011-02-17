@@ -2,7 +2,7 @@ package org.osflash.statemachine.base {
 	import flexunit.framework.Assert;
 
 	import org.osflash.statemachine.supporting.mocks.MockSignalListener;
-	import org.osflash.statemachine.transitioning.TransitionPhases;
+	import org.osflash.statemachine.transitioning.TransitionPhase;
 
 	public class FSMControllerTests {
 
@@ -22,7 +22,7 @@ package org.osflash.statemachine.base {
 
 		public function transitionPhase_TestTransitionPhaseDefaultValue_ReturnsDefaultValue():void{
 
-			Assert.assertEquals("Default value of transitionPhase should be TransitionPhases.NONE", TransitionPhases.NONE, fsmController.transitionPhase )
+			Assert.assertEquals("Default value of transitionPhase should be TransitionPhases.NONE", TransitionPhase.NONE, fsmController.transitionPhase )
 
 		}
 
@@ -35,7 +35,7 @@ package org.osflash.statemachine.base {
 		[Test (expected='org.osflash.statemachine.errors.StateTransitionError')]
 		public function action_ActioningTransitionWhilePhaseMarkedAsEnteringGuard_ThrowsStateTransitionError():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.ENTERING_GUARD );
+			fsmController.setTransitionPhase( TransitionPhase.ENTERING_GUARD );
 			fsmController.action( null, null );
 
 		}
@@ -43,7 +43,7 @@ package org.osflash.statemachine.base {
 		[Test (expected='org.osflash.statemachine.errors.StateTransitionError')]
 		public function action_ActioningTransitionWhilePhaseMarkedAsExitingGuard_ThrowsStateTransitionError():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.EXITING_GUARD );
+			fsmController.setTransitionPhase( TransitionPhase.EXITING_GUARD );
 			fsmController.action( null, null );
 
 		}
@@ -51,7 +51,7 @@ package org.osflash.statemachine.base {
 		[Test (expected='org.osflash.statemachine.errors.StateTransitionError')]
 		public function action_ActioningTransitionWhilePhaseMarkedAsTearDown_ThrowsStateTransitionError():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.TEAR_DOWN );
+			fsmController.setTransitionPhase( TransitionPhase.TEAR_DOWN );
 			fsmController.action( null, null );
 
 		}
@@ -59,7 +59,7 @@ package org.osflash.statemachine.base {
 		[Test]
 		public function action_ActioningTransitionWhilePhaseMarkedAsEntered_NoErrorThrown():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.ENTERED );
+			fsmController.setTransitionPhase( TransitionPhase.ENTERED );
 			fsmController.action( null, null );
 
 		}
@@ -67,7 +67,7 @@ package org.osflash.statemachine.base {
 		[Test]
 		public function action_ActioningTransitionWhilePhaseMarkedAsCancelled_NoErrorThrown():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.CANCELLED );
+			fsmController.setTransitionPhase( TransitionPhase.CANCELLED );
 			fsmController.action( null, null );
 
 		}
@@ -75,7 +75,7 @@ package org.osflash.statemachine.base {
 		[Test]
 		public function action_ActioningTransitionWhilePhaseMarkedAsChanged_NoErrorThrown():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.GLOBAL_CHANGED );
+			fsmController.setTransitionPhase( TransitionPhase.GLOBAL_CHANGED );
 			fsmController.action( null, null );
 
 		}
@@ -83,7 +83,7 @@ package org.osflash.statemachine.base {
 		[Test]
 		public function action_ActioningTransitionWhilePhaseMarkedAsNone_NoErrorThrown():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.NONE );
+			fsmController.setTransitionPhase( TransitionPhase.NONE );
 			fsmController.action( null, null );
 
 		}
@@ -137,7 +137,7 @@ package org.osflash.statemachine.base {
 		[Test]
 		public function cancel_CancellingTransitionWhilePhaseMarkedAsEnteringGuard_NoErrorThrown():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.ENTERING_GUARD );
+			fsmController.setTransitionPhase( TransitionPhase.ENTERING_GUARD );
 			fsmController.cancel( null, null );
 
 		}
@@ -145,7 +145,7 @@ package org.osflash.statemachine.base {
 		[Test]
 		public function cancel_CancellingTransitionWhilePhaseMarkedAsExitingGuard_NoErrorThrown():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.EXITING_GUARD );
+			fsmController.setTransitionPhase( TransitionPhase.EXITING_GUARD );
 			fsmController.cancel( null, null );
 
 		}
@@ -153,7 +153,7 @@ package org.osflash.statemachine.base {
 		[Test (expected='org.osflash.statemachine.errors.StateTransitionError')]
 		public function cancel_CancellingTransitionWhilePhaseMarkedAsCancelled_ThrowsStateTransitionError():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.CANCELLED );
+			fsmController.setTransitionPhase( TransitionPhase.CANCELLED );
 			fsmController.cancel( null, null );
 
 		}
@@ -161,7 +161,7 @@ package org.osflash.statemachine.base {
 		[Test (expected='org.osflash.statemachine.errors.StateTransitionError')]
 		public function cancel_CancellingTransitionWhilePhaseMarkedAsEntered_ThrowsStateTransitionError():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.ENTERED );
+			fsmController.setTransitionPhase( TransitionPhase.ENTERED );
 			fsmController.cancel( null, null );
 
 		}
@@ -169,7 +169,7 @@ package org.osflash.statemachine.base {
 		[Test (expected='org.osflash.statemachine.errors.StateTransitionError')]
 		public function cancel_CancellingTransitionWhilePhaseMarkedAsChanged_ThrowsStateTransitionError():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.GLOBAL_CHANGED );
+			fsmController.setTransitionPhase( TransitionPhase.GLOBAL_CHANGED );
 			fsmController.cancel( null, null );
 
 		}
@@ -177,7 +177,7 @@ package org.osflash.statemachine.base {
 		[Test (expected='org.osflash.statemachine.errors.StateTransitionError')]
 		public function cancel_CancellingTransitionWhilePhaseMarkedAsTearDow_ThrowsStateTransitionError():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.TEAR_DOWN );
+			fsmController.setTransitionPhase( TransitionPhase.TEAR_DOWN );
 			fsmController.cancel( null, null );
 
 		}
@@ -185,7 +185,7 @@ package org.osflash.statemachine.base {
 		[Test (expected='org.osflash.statemachine.errors.StateTransitionError')]
 		public function cancel_CancellingTransitionWhilePhaseMarkedAsNone_ThrowsStateTransitionError():void{
 
-			fsmController.setTransitionPhase( TransitionPhases.NONE );
+			fsmController.setTransitionPhase( TransitionPhase.NONE );
 			fsmController.cancel( null, null );
 
 		}
