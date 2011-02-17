@@ -7,9 +7,10 @@ package org.osflash.statemachine.base {
 	import org.osflash.statemachine.signals.Action;
 	import org.osflash.statemachine.signals.Cancel;
 	import org.osflash.statemachine.signals.Changed;
-	import org.osflash.statemachine.transitioning.TransitionPhases;
+	import org.osflash.statemachine.core.ITransitionPhase;
+import org.osflash.statemachine.transitioning.TransitionPhase;
 
-	/**
+/**
 	 * SignalStateMachine FSMController composes the Signals that communicate between the StateMachine
 	 * and the framework actors.  It should be injected its IFSMController interface.
 	 */
@@ -34,6 +35,11 @@ package org.osflash.statemachine.base {
 		 * @private
 		 */
 		private var _currentStateName:String;
+
+		/**
+		 * @private
+		 */
+		private var _referringAction:String;
 
 		/**
 		 * @private
@@ -63,7 +69,7 @@ package org.osflash.statemachine.base {
 		/**
 		 * @private
 		 */
-		private var _transitionPhase:String = TransitionPhases.NONE;
+		private var _transitionPhase:ITransitionPhase = TransitionPhase.NONE;
 
 		/**
 		 * Creates a new instance of FSMController
@@ -84,6 +90,13 @@ package org.osflash.statemachine.base {
 		/**
 		 * @inheritDoc
 		 */
+		public function get referringAction():String{
+			return _referringAction;
+		}
+
+		/**
+		 * @inheritDoc
+		 */
 		public function get isTransitioning():Boolean{
 			return _isTransitioning;
 		}
@@ -92,7 +105,7 @@ package org.osflash.statemachine.base {
 		 * @inheritDoc
 		 */
 		public function get transitionPhase():String{
-			return _transitionPhase;
+			return _transitionPhase.name;
 		}
 
 		/**
@@ -110,9 +123,10 @@ package org.osflash.statemachine.base {
 		 */
 		public function action( actionName:String, payload:Object = null ):void{
 
-			var isIllegal:Boolean = (   transitionPhase == TransitionPhases.TEAR_DOWN ||
-					transitionPhase == TransitionPhases.ENTERING_GUARD ||
-					transitionPhase == TransitionPhases.EXITING_GUARD       );
+			var isIllegal:Boolean =
+                    (_transitionPhase == TransitionPhase.TEAR_DOWN ||
+					_transitionPhase == TransitionPhase.ENTERING_GUARD ||
+					_transitionPhase == TransitionPhase.EXITING_GUARD       );
 
 			if( isIllegal )
 				throw new StateTransitionError( ILLEGAL_ACTION_ERROR );
@@ -155,8 +169,9 @@ package org.osflash.statemachine.base {
 		 */
 		public function cancel( reason:String, payload:Object = null ):void{
 
-			var isLegal:Boolean = ( transitionPhase == TransitionPhases.ENTERING_GUARD ||
-					transitionPhase == TransitionPhases.EXITING_GUARD       );
+			var isLegal:Boolean =
+                    ( _transitionPhase == TransitionPhase.ENTERING_GUARD ||
+					_transitionPhase == TransitionPhase.EXITING_GUARD       );
 
 			if( isLegal )
 				_cancel.dispatch( reason, payload );
@@ -226,6 +241,14 @@ package org.osflash.statemachine.base {
 			_currentStateName = state.name;
 		}
 
+
+		/**
+		 * @inheritDoc
+		 */
+		public function setReferringAction( value:String ):void{
+			_referringAction = value;
+		}
+
 		/**
 		 * @inheritDoc
 		 */
@@ -236,12 +259,14 @@ package org.osflash.statemachine.base {
 		/**
 		 * @inheritDoc
 		 */
-		public function setTransitionPhase( value:String ):void{
+		public function setTransitionPhase( value:ITransitionPhase ):void{
 			_transitionPhase = value;
 		}
 
 		public function get hasChangedListener():Boolean{
-			return (_changed.numListeners > 0 );
+			return (_changed == null ) ? false : (_changed.numListeners > 0 );
 		}
+
+
 	}
 }
