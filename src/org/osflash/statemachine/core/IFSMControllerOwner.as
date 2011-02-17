@@ -1,6 +1,7 @@
 package org.osflash.statemachine.core {
+import org.osflash.statemachine.transitioning.TransitionPhase;
 
-	/**
+/**
 	 * The inward-facing interface between the FSMController and the
 	 * SignalTransitionController
 	 */
@@ -45,7 +46,13 @@ package org.osflash.statemachine.core {
 		 * Sets the current phase of the transition cycle
 		 * @see TransitionPhases
 		 */
-		function setTransitionPhase( value:String ):void;
+		function setTransitionPhase( value:ITransitionPhase ):void;
+
+		/**
+		 * Sets the referring action of the transition cycle
+		 * @see TransitionPhases
+		 */
+		function setReferringAction( value:String ):void;
 
 		/**
 		 * The destroy method for GC
