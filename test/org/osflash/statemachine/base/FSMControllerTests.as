@@ -20,12 +20,14 @@ package org.osflash.statemachine.base {
 			fsmController = null;
 		}
 
+        [Test]
 		public function transitionPhase_TestTransitionPhaseDefaultValue_ReturnsDefaultValue():void{
 
 			Assert.assertEquals("Default value of transitionPhase should be TransitionPhases.NONE", TransitionPhase.NONE, fsmController.transitionPhase )
 
 		}
 
+        [Test]
 		public function currentStateName_TestCurrentStateNameDefaultValue_ReturnsNull():void{
 
 			Assert.assertNull("Default value of transition should be NULL", fsmController.currentStateName );

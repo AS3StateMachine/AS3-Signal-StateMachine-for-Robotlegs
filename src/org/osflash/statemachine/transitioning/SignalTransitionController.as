@@ -103,6 +103,7 @@ package org.osflash.statemachine.transitioning {
 			_controller.setReferringAction( currentState.referringAction );
 		}
 
+
 		/**
 		 * @inheritDoc
 		 */
