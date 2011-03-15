@@ -82,13 +82,13 @@ package org.osflash.statemachine.decoding {
 		 * Adds a command Class reference.
 		 *
 		 * Any command declared in the state declaration must be added here.
-		 * @param commandClass the command class
+		 * @param value the command class
 		 * @return whether the command class has been add successfully
 		 */
-		public function addCommandClass( commandClass:Class ):Boolean{
+		public function addClass( value:Class ):Boolean{
 			if( classBagMap == null ) classBagMap = [];
-			if( hasCommandClass( commandClass ) ) return false;
-			classBagMap.push( new ClassBag( commandClass ) );
+			if( hasClass( value ) ) return false;
+			classBagMap.push( new ClassBag( value ) );
 			return true;
 		}
 
@@ -98,7 +98,7 @@ package org.osflash.statemachine.decoding {
 		 * @param name this can either be the name, the fully qualified name or an instance of the Class
 		 * @return
 		 */
-		public function hasCommandClass( name:Object ):Boolean{
+		public function hasClass( name:Object ):Boolean{
 			return ( getCommandClass( name ) != null );
 		}
 

@@ -77,8 +77,8 @@ package org.osflash.statemachine {
 		 * @param commandClass a command Class reference
 		 * @return Whether the command Class was added successfully
 		 */
-		public function addCommandClass( commandClass:Class ):Boolean{
-			return _decoder.addCommandClass( commandClass );
+		public function addClass( commandClass:Class ):Boolean{
+			return _decoder.addClass( commandClass );
 		}
 
 		/**
@@ -87,8 +87,8 @@ package org.osflash.statemachine {
 		 * @param name this can either be the name, the fully qualified name or an instance of the Class
 		 * @return
 		 */
-		public function hasCommandClass( name:Object ):Boolean{
-			return _decoder.hasCommandClass( name );
+		public function hasClass( name:Object ):Boolean{
+			return _decoder.hasClass( name );
 		}
 
 		/**
