@@ -18,7 +18,11 @@ import org.robotlegs.core.IGuardedSignalCommandMap;
 import org.robotlegs.core.IInjector;
 import org.robotlegs.core.IReflector;
 
-// NB we don't need to test the GuardedCommandMap functionality here, just the injections
+///////////////////////////////////////////////////////////////////////////
+// Here were are testing that the guards are mapped to the correct signals
+// we do not need to test their functionality, as the
+// GuardedSignalCommandMapTest already do that.
+///////////////////////////////////////////////////////////////////////////
 public class SignalStateMachineGuardTests implements ICommandReporter {
 
 
@@ -38,7 +42,7 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
         signalCommandMap = new GuardedSignalCommandMap(injector);
         fsmInjector = new SignalFSMInjector(injector, signalCommandMap);
 
-        fsmInjector.initiate(FSM, new TraceLogger());
+        fsmInjector.initiate(FSM);
     }
 
     [After]
@@ -52,6 +56,10 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
 
 
     [Test]
+    ///////////////////////////////////////////////////////////////////////////
+    // We are testing various combinations of no, single and multiple guards
+    // all of which succeed
+    ///////////////////////////////////////////////////////////////////////////
     public function FIRST_state_entered_commands_should_all_be_executed():void {
         addClasses();
         injectFSM();
@@ -62,6 +70,10 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
     }
 
     [Test]
+    ///////////////////////////////////////////////////////////////////////////
+    // We are testing various combinations of no, single and multiple guards
+    // all of which fail
+    ///////////////////////////////////////////////////////////////////////////
     public function SECOND_state_entered_commands_should_not_be_executed():void {
         addClasses();
         injectFSM();
@@ -72,6 +84,10 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
     }
 
     [Test]
+    ///////////////////////////////////////////////////////////////////////////
+    // We are testing various combinations of no, single and multiple guards
+    // two of which succeed, two fail
+    ///////////////////////////////////////////////////////////////////////////
     public function THIRD_state_entered_commands_two_are_executed_two_are_not():void {
         addClasses();
         injectFSM();
@@ -83,7 +99,11 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
 
 
     [Test]
-    public function FOURTH_state_commands_should_be_executed_according_to_guards():void {
+    ///////////////////////////////////////////////////////////////////////////
+    // We are testing that all the phase signals are working for a straight
+    // transition. Each phase has two commands, one will succeed, the other, fail
+    ///////////////////////////////////////////////////////////////////////////
+    public function FOURTH_state_all_phase_signal_commands_should_be_executed_according_to_guards():void {
         addClasses();
         injectFSM();
         var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
@@ -93,16 +113,35 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
         Assert.assertWithApply(assertArraysEqual, [expected, reportedCommands])
     }
 
-    /*
-     [Test]
-     public function FIFTH_state_entered_commands_should_not_be_executed_by_a_happy_guard_and_a_grumpy_guard():void {
-     addClasses();
-     injectFSM();
-     var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
-     var expected:Array = [SampleCommandB, SampleCommandD];
-     fsmController.action(TO_FIFTH);
-     Assert.assertWithApply(assertArraysEqual, [expected, reportedCommands])
-     }*/
+    [Test]
+    ///////////////////////////////////////////////////////////////////////////
+    // We are testing that the phase signal is working for the cancelled
+    // phase signal. the CancellationHandleCommand should be executed
+    ///////////////////////////////////////////////////////////////////////////
+    public function FIFTH_state_cancelled_signal_command_executed():void {
+        addClasses();
+        injectFSM();
+        var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
+        var expected:Array = [CancelTransitionCommand, CancellationHandleCommand];
+        fsmController.action(TO_FIFTH);
+        fsmController.action(TO_EMPTY);
+        Assert.assertWithApply(assertArraysEqual, [expected, reportedCommands])
+    }
+
+    [Test]
+    ///////////////////////////////////////////////////////////////////////////
+    // We are testing that the phase signal is working for the cancelled
+    // phase signal. the CancellationHandleCommand should not be executed
+    ///////////////////////////////////////////////////////////////////////////
+    public function SIXTH_state_cancelled_signal_command_not_executed():void {
+        addClasses();
+        injectFSM();
+        var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
+        var expected:Array = [CancelTransitionCommand];
+        fsmController.action(TO_SIXTH);
+        fsmController.action(TO_EMPTY);
+        Assert.assertWithApply(assertArraysEqual, [expected, reportedCommands])
+    }
 
 
     public function reportCommand(commandClass:Class):void {
@@ -141,14 +180,15 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
     private static const THIRD:String = "third";
     private static const FOURTH:String = "fourth";
     private static const FIFTH:String = "fifth";
+    private static const SIXTH:String = "sixth";
     private static const EMPTY:String = "empty";
-
 
     private static const TO_FIRST:String = "toFirst";
     private static const TO_SECOND:String = "toSecond";
     private static const TO_THIRD:String = "toThird";
     private static const TO_FOURTH:String = "toFourth";
     private static const TO_FIFTH:String = "toFifth";
+    private static const TO_SIXTH:String = "toSixth";
     private static const TO_EMPTY:String = "toEmpty";
 
 
@@ -160,6 +200,7 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
                     <transition action={TO_THIRD} target={THIRD}/>
                     <transition action={TO_FOURTH} target={FOURTH}/>
                     <transition action={TO_FIFTH} target={FIFTH}/>
+                    <transition action={TO_SIXTH} target={SIXTH}/>
                 </state>
 
                 <state name={FIRST} >
@@ -264,33 +305,31 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
                     <transition action={TO_EMPTY} target={EMPTY}/>
                 </state>
 
-                <state name={FIFTH} >
-                    <entered>
-                        <commandClass classPath="SampleCommandA" >
-                            <guardClass classPath="HappyGuard" />
-                            <guardClass classPath="HappyGuard" />
-                            <guardClass classPath="GrumpyGuard" />
+                <state name={FIFTH}>
+                    <exitingGuard>
+                        <commandClass classPath="CancelTransitionCommand"/>
+                    </exitingGuard>
+                    <cancelled>
+                        <commandClass classPath="CancellationHandleCommand">
+                            <guardClass classPath="HappyGuard"/>
                         </commandClass>
-                        <commandClass classPath="SampleCommandB" >
-                            <guardClass classPath="HappyGuard" />
-                            <guardClass classPath="HappyGuard" />
-                            <guardClass classPath="HappyGuard" />
-                        </commandClass>
-                        <commandClass classPath="SampleCommandC" >
-                            <guardClass classPath="GrumpyGuard" />
-                            <guardClass classPath="HappyGuard" />
-                        </commandClass>
-                        <commandClass classPath="SampleCommandD" >
-                        </commandClass>
-
-                    </entered>
+                    </cancelled>
+                    <transition action={TO_EMPTY} target={EMPTY}/>
                 </state>
 
-                <state name={EMPTY}>
-
-
+                <state name={SIXTH}>
+                    <exitingGuard>
+                        <commandClass classPath="CancelTransitionCommand"/>
+                    </exitingGuard>
+                    <cancelled>
+                        <commandClass classPath="CancellationHandleCommand">
+                            <guardClass classPath="GrumpyGuard"/>
+                        </commandClass>
+                    </cancelled>
+                    <transition action={TO_EMPTY} target={EMPTY}/>
                 </state>
 
+                <state name={EMPTY}/>
 
             </fsm>
             ;
