@@ -1,5 +1,16 @@
 h2. Change log
 
+h3. AS3-Signal-StateMachine-for-Robotlegs-V0-4-000: 17/03/2011
+
+* Upgraded signalCommandMap v0.3 to v0.4 which includes the
+  GuardedSignalCommandMap
+* Changed XML declaration and decoding to enable mapping of
+  Guard Classes
+* Added referringAction property to IFSMController
+* Implemented ITransitionPhase from StateMachine-Base v1.3.000 to create
+  enumbs for phases
+* Implemented new logging format from StateMachine-Base v1.3.000
+
 h3. AS3-Signal-StateMachine-for-Robotlegs-V0-3-000: 31/12/2010
 
 * SignalTransitionController: Added logging (see Base v 1.2.000).
@@ -12,7 +23,6 @@ h3. AS3-Signal-StateMachine-for-Robotlegs-V0-3-000: 31/12/2010
 * ISignalState: Added property checking so Signals are not lazily
   instantiated by getter.
 * SignalState: Implements changes to ISignalState.
-
 
 h3. AS3-Signal-StateMachine-for-Robotlegs-V0-2-000: 2/12/2010
 
