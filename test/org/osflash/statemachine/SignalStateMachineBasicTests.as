@@ -1,16 +1,20 @@
 package org.osflash.statemachine {
-import flexunit.framework.Assert;
+
+
+import org.flexunit.Assert
 
 import org.osflash.signals.ISignal;
 import org.osflash.statemachine.core.IFSMController;
 import org.osflash.statemachine.core.ISignalState;
 import org.osflash.statemachine.states.SignalState;
+import org.osflash.statemachine.transitioning.TransitionPhase;
 import org.robotlegs.adapters.SwiftSuspendersInjector;
 import org.robotlegs.adapters.SwiftSuspendersReflector;
 import org.robotlegs.base.GuardedSignalCommandMap;
 import org.robotlegs.core.IGuardedSignalCommandMap;
 import org.robotlegs.core.IInjector;
 import org.robotlegs.core.IReflector;
+
 ///////////////////////////////////////////////////////////////////////////
 // Here were are testing the behaviour of the StateMachine without any
 // mapping of commands
@@ -441,12 +445,12 @@ public class SignalStateMachineBasicTests {
         Assert.assertEquals(THIRD, onChangedArgument);
     }
 
-     [Test(expected="org.osflash.statemachine.errors.StateTransitionError")]
+    [Test(expected="org.osflash.statemachine.errors.StateTransitionError")]
     public function cancel_transition_from_generic_changed_phase():void {
-         var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
+        var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
         var reason:String;
         var onChanged:Function = function (stateName:String):void {
-            fsmController.cancel( reason );
+            fsmController.cancel(reason);
         };
         fsmController.addChangedListenerOnce(onChanged);
         fsmController.action(NEXT); // to SECOND
@@ -455,16 +459,157 @@ public class SignalStateMachineBasicTests {
     [Test]
     public function invoke_transition_from_generic_changed_phase():void {
         var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
-
         var onChange:Function = function (stateName:String):void {
             fsmController.action(NEXT); // to THIRD
         };
         fsmController.addChangedListenerOnce(onChange);
 
         fsmController.action(NEXT); // to SECOND
-
         Assert.assertEquals(THIRD, fsmController.currentStateName);
+    }
 
+    [Test]
+    public function straight_transition_phases_fired_in_correct_order_and_none_calls_tested():void {
+        var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
+        var secondState:ISignalState = injector.getInstance(ISignalState, SECOND) as ISignalState;
+        var thirdState:ISignalState = injector.getInstance(ISignalState, THIRD) as ISignalState;
+        var expected:Array = [  TransitionPhase.GLOBAL_CHANGED, TransitionPhase.EXITING_GUARD ,
+                                TransitionPhase.ENTERING_GUARD, TransitionPhase.TEAR_DOWN,
+                                TransitionPhase.ENTERED, TransitionPhase.GLOBAL_CHANGED];
+        var got:Array = [];
+
+        var onExitingGuard:Function = function (payload:Object):void {
+            got.push( TransitionPhase.EXITING_GUARD );
+        };
+        secondState.exitingGuard.add(onExitingGuard);
+
+        var onEnteringGuard:Function = function (payload:Object):void {
+            got.push( TransitionPhase.ENTERING_GUARD );
+        };
+        thirdState.enteringGuard.add(onEnteringGuard);
+
+        var onCancellation:Function = function (reason:String, payload:Object):void {
+            got.push( TransitionPhase.CANCELLED );
+        };
+        secondState.cancelled.add(onCancellation);
+
+        var onTearDownGuard:Function = function ():void {
+            got.push( TransitionPhase.TEAR_DOWN );
+        };
+        secondState.tearDown.add(onTearDownGuard);
+
+        var onEntered:Function = function (payload:Object):void {
+            got.push( TransitionPhase.ENTERED );
+        };
+        thirdState.entered.add(onEntered);
+
+        var onChanged:Function = function (stateName:String):void {
+            got.push( TransitionPhase.GLOBAL_CHANGED )
+        };
+        fsmController.addChangedListener(onChanged);
+
+        fsmController.action(NEXT); // to SECOND
+        fsmController.action(NEXT); // to THIRD
+        Assert.assertWithApply(assertArraysEqual, [expected, got]);
+    }
+
+
+        [Test]
+    public function transition_cancelled_from_exitingGuard_phases_fired_in_correct_order_and_none_calls_tested():void {
+               var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
+        var secondState:ISignalState = injector.getInstance(ISignalState, SECOND) as ISignalState;
+        var thirdState:ISignalState = injector.getInstance(ISignalState, THIRD) as ISignalState;
+        var expected:Array = [  TransitionPhase.GLOBAL_CHANGED, TransitionPhase.EXITING_GUARD ,
+                                TransitionPhase.CANCELLED];
+        var got:Array = [];
+
+        var onExitingGuard:Function = function (payload:Object):void {
+            got.push( TransitionPhase.EXITING_GUARD );
+            fsmController.cancel( "cancellationReason" )
+        };
+        secondState.exitingGuard.add(onExitingGuard);
+
+        var onEnteringGuard:Function = function (payload:Object):void {
+            got.push( TransitionPhase.ENTERING_GUARD );
+        };
+        thirdState.enteringGuard.add(onEnteringGuard);
+
+        var onCancellation:Function = function (reason:String, payload:Object):void {
+            got.push( TransitionPhase.CANCELLED );
+        };
+        secondState.cancelled.add(onCancellation);
+
+        var onTearDownGuard:Function = function ():void {
+            got.push( TransitionPhase.TEAR_DOWN );
+        };
+        secondState.tearDown.add(onTearDownGuard);
+
+        var onEntered:Function = function (payload:Object):void {
+            got.push( TransitionPhase.ENTERED );
+        };
+        thirdState.entered.add(onEntered);
+
+        var onChanged:Function = function (stateName:String):void {
+            got.push( TransitionPhase.GLOBAL_CHANGED )
+        };
+        fsmController.addChangedListener(onChanged);
+
+        fsmController.action(NEXT); // to SECOND
+        fsmController.action(NEXT); // to THIRD
+        Assert.assertWithApply(assertArraysEqual, [expected, got]);
+    }
+
+    [Test]
+    public function transition_cancelled_from_enteringGuard_phases_fired_in_correct_order_and_none_calls_tested():void {
+               var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
+        var secondState:ISignalState = injector.getInstance(ISignalState, SECOND) as ISignalState;
+        var thirdState:ISignalState = injector.getInstance(ISignalState, THIRD) as ISignalState;
+        var expected:Array = [  TransitionPhase.GLOBAL_CHANGED, TransitionPhase.EXITING_GUARD ,
+                                TransitionPhase.ENTERING_GUARD, TransitionPhase.CANCELLED];
+        var got:Array = [];
+
+        var onExitingGuard:Function = function (payload:Object):void {
+            got.push( TransitionPhase.EXITING_GUARD );
+        };
+        secondState.exitingGuard.add(onExitingGuard);
+
+        var onEnteringGuard:Function = function (payload:Object):void {
+            got.push( TransitionPhase.ENTERING_GUARD );
+            fsmController.cancel( "cancellationReason" )
+        };
+        thirdState.enteringGuard.add(onEnteringGuard);
+
+        var onCancellation:Function = function (reason:String, payload:Object):void {
+            got.push( TransitionPhase.CANCELLED );
+        };
+        secondState.cancelled.add(onCancellation);
+
+        var onTearDownGuard:Function = function ():void {
+            got.push( TransitionPhase.TEAR_DOWN );
+        };
+        secondState.tearDown.add(onTearDownGuard);
+
+        var onEntered:Function = function (payload:Object):void {
+            got.push( TransitionPhase.ENTERED );
+        };
+        thirdState.entered.add(onEntered);
+
+        var onChanged:Function = function (stateName:String):void {
+            got.push( TransitionPhase.GLOBAL_CHANGED )
+        };
+        fsmController.addChangedListener(onChanged);
+
+        fsmController.action(NEXT); // to SECOND
+        fsmController.action(NEXT); // to THIRD
+        Assert.assertWithApply(assertArraysEqual, [expected, got]);
+    }
+
+    public function assertArraysEqual(expected:Array, got:Array):void {
+        Assert.assertEquals(expected.length, got.length);
+        if (expected.length != got.length)return;
+        for (var i:int = 0; i < expected.length; i++) {
+            Assert.assertStrictlyEquals(expected[i], got[i]);
+        }
     }
 
 
@@ -491,6 +636,7 @@ public class SignalStateMachineBasicTests {
                 <state name={THIRD} inject="true">
                     <transition action={NEXT} target={THIRD}/>
                 </state>
+
             </fsm>;
 
 
