@@ -263,6 +263,9 @@ import org.osflash.statemachine.transitioning.TransitionPhase;
 			_transitionPhase = value;
 		}
 
+        /**
+		 * @inheritDoc
+		 */
 		public function get hasChangedListener():Boolean{
 			return (_changed == null ) ? false : (_changed.numListeners > 0 );
 		}
