@@ -1,8 +1,10 @@
 package org.osflash.statemachine {
 import flexunit.framework.Assert;
 
+import org.osflash.signals.ISignal;
 import org.osflash.statemachine.core.IFSMController;
 import org.osflash.statemachine.core.ISignalState;
+import org.osflash.statemachine.states.SignalState;
 import org.robotlegs.adapters.SwiftSuspendersInjector;
 import org.robotlegs.adapters.SwiftSuspendersReflector;
 import org.robotlegs.base.GuardedSignalCommandMap;
@@ -18,11 +20,13 @@ public class SignalStateMachineBasicTests {
     private var signalCommandMap:IGuardedSignalCommandMap;
     private var fsmInjector:SignalFSMInjector;
 
+    //TODO: Test all phases for different transition
+
     [Before]
     public function before():void {
         injector = new SwiftSuspendersInjector();
         reflector = new SwiftSuspendersReflector();
-        signalCommandMap = new GuardedSignalCommandMap(injector, reflector);
+        signalCommandMap = new GuardedSignalCommandMap(injector);
         fsmInjector = new SignalFSMInjector(injector, signalCommandMap);
         fsmInjector.initiate(FSM);
         fsmInjector.inject();
@@ -54,6 +58,54 @@ public class SignalStateMachineBasicTests {
     public function STARTING_state_should_not_be_injected():void {
         Assert.assertFalse(injector.hasMapping(ISignalState, STARTING));
     }
+
+    [Test]
+    public function SECOND_and_THIRD_state_should_be_injected():void {
+        Assert.assertTrue("SECOND state should be injected", injector.hasMapping(ISignalState, SECOND));
+        Assert.assertTrue("THIRD state should be injected", injector.hasMapping(ISignalState, THIRD));
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    [Test]
+    public function SECOND_state_should_lazily_instantiate_cancellation_signal():void {
+        var state:SignalState = injector.getInstance(ISignalState, SECOND) as SignalState;
+        Assert.assertFalse(state.hasCancelled);
+        var signal:ISignal = state.cancelled;
+        Assert.assertTrue(state.hasCancelled);
+    }
+
+    [Test]
+    public function SECOND_state_should_lazily_instantiate_entered_signal():void {
+        var state:SignalState = injector.getInstance(ISignalState, SECOND) as SignalState;
+        Assert.assertFalse(state.hasEntered);
+        var signal:ISignal = state.entered;
+        Assert.assertTrue(state.hasEntered);
+    }
+
+    [Test]
+    public function SECOND_state_should_lazily_instantiate_enteringGuard_signal():void {
+        var state:SignalState = injector.getInstance(ISignalState, SECOND) as SignalState;
+        Assert.assertFalse(state.hasEnteringGuard);
+        var signal:ISignal = state.enteringGuard;
+        Assert.assertTrue(state.hasEnteringGuard);
+    }
+
+    [Test]
+    public function SECOND_state_should_lazily_instantiate_exitingGuard_signal():void {
+        var state:SignalState = injector.getInstance(ISignalState, SECOND) as SignalState;
+        Assert.assertFalse(state.hasExitingGuard);
+        var signal:ISignal = state.exitingGuard;
+        Assert.assertTrue(state.hasExitingGuard);
+    }
+
+    [Test]
+    public function SECOND_state_should_lazily_instantiate_tearDown_signal():void {
+        var state:SignalState = injector.getInstance(ISignalState, SECOND) as SignalState;
+        Assert.assertFalse(state.hasTearDown);
+        var signal:ISignal = state.tearDown;
+        Assert.assertTrue(state.hasTearDown);
+    }
+
 
     [Test]
     public function advance_to_next_state():void {
@@ -129,8 +181,8 @@ public class SignalStateMachineBasicTests {
         state.exitingGuard.addOnce(onExitingGuard);
 
         var onCancellation:Function = function (reason:String, payload:Object):void {
-            Assert.assertEquals( cancellationReason, reason );
-            Assert.assertStrictlyEquals( cancellationPayload, payload );
+            Assert.assertEquals(cancellationReason, reason);
+            Assert.assertStrictlyEquals(cancellationPayload, payload);
             wasOnCancellationCalled = true;
         };
         state.cancelled.addOnce(onCancellation);
@@ -138,7 +190,7 @@ public class SignalStateMachineBasicTests {
         fsmController.action(NEXT);  // to SECOND
         fsmController.action(NEXT);  // to THIRD
 
-        Assert.assertTrue( wasOnCancellationCalled);
+        Assert.assertTrue(wasOnCancellationCalled);
 
 
     }
@@ -158,8 +210,8 @@ public class SignalStateMachineBasicTests {
         thirdState.enteringGuard.addOnce(onEnteringGuard);
 
         var onCancellation:Function = function (reason:String, payload:Object):void {
-            Assert.assertEquals( cancellationReason, reason );
-            Assert.assertStrictlyEquals( cancellationPayload, payload );
+            Assert.assertEquals(cancellationReason, reason);
+            Assert.assertStrictlyEquals(cancellationPayload, payload);
             wasOnCancellationCalled = true;
         };
         secondState.cancelled.addOnce(onCancellation);
@@ -167,12 +219,10 @@ public class SignalStateMachineBasicTests {
         fsmController.action(NEXT);  // to SECOND
         fsmController.action(NEXT);  // to THIRD
 
-        Assert.assertTrue( wasOnCancellationCalled );
+        Assert.assertTrue(wasOnCancellationCalled);
 
 
     }
-
-
 
 
     [Test]
@@ -187,12 +237,6 @@ public class SignalStateMachineBasicTests {
         var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
         fsmController.action(TO_NON_DECLARED_TARGET);
 
-    }
-
-    [Test]
-    public function SECOND_and_THIRD_state_should_be_injected():void {
-        Assert.assertTrue("SECOND state should be injected", injector.hasMapping(ISignalState, SECOND));
-        Assert.assertTrue("THIRD state should be injected", injector.hasMapping(ISignalState, THIRD));
     }
 
     [Test]
@@ -340,6 +384,83 @@ public class SignalStateMachineBasicTests {
 
         fsmController.action(NEXT); // to SECOND
         fsmController.action(NEXT); // to THIRD (but cancelled)
+
+        Assert.assertEquals(THIRD, fsmController.currentStateName);
+
+    }
+
+    [Test]
+    public function generic_changed_phase_is_called_once_only():void {
+        var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
+        var wasOnChangedCalled:Boolean;
+        var onChanged:Function = function (stateName:String):void {
+            wasOnChangedCalled = true;
+        };
+        fsmController.addChangedListenerOnce(onChanged);
+
+        fsmController.action(NEXT); // to SECOND
+        Assert.assertTrue(wasOnChangedCalled);
+        wasOnChangedCalled = false;
+
+        fsmController.action(NEXT); // to SECOND
+        Assert.assertFalse(wasOnChangedCalled);
+    }
+
+    [Test]
+    public function generic_changed_phase_is_called_multiple_times():void {
+        var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
+        var wasOnChangedCalled:Boolean;
+        var onChanged:Function = function (stateName:String):void {
+            wasOnChangedCalled = true;
+        };
+        fsmController.addChangedListener(onChanged);
+
+        fsmController.action(NEXT); // to SECOND
+        Assert.assertTrue(wasOnChangedCalled);
+        wasOnChangedCalled = false;
+
+        fsmController.action(NEXT); // to THIRD
+        Assert.assertTrue(wasOnChangedCalled);
+    }
+
+    [Test]
+    public function generic_changed_phase_is_called_testing_argument():void {
+        var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
+        var onChangedArgument:String;
+        var onChanged:Function = function (stateName:String):void {
+            onChangedArgument = stateName;
+        };
+        fsmController.addChangedListener(onChanged);
+
+        fsmController.action(NEXT); // to SECOND
+        Assert.assertEquals(SECOND, onChangedArgument);
+        onChangedArgument = null;
+
+        fsmController.action(NEXT); // to THIRD
+        Assert.assertEquals(THIRD, onChangedArgument);
+    }
+
+     [Test(expected="org.osflash.statemachine.errors.StateTransitionError")]
+    public function cancel_transition_from_generic_changed_phase():void {
+         var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
+        var reason:String;
+        var onChanged:Function = function (stateName:String):void {
+            fsmController.cancel( reason );
+        };
+        fsmController.addChangedListenerOnce(onChanged);
+        fsmController.action(NEXT); // to SECOND
+    }
+
+    [Test]
+    public function invoke_transition_from_generic_changed_phase():void {
+        var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
+
+        var onChange:Function = function (stateName:String):void {
+            fsmController.action(NEXT); // to THIRD
+        };
+        fsmController.addChangedListenerOnce(onChange);
+
+        fsmController.action(NEXT); // to SECOND
 
         Assert.assertEquals(THIRD, fsmController.currentStateName);
 
