@@ -16,7 +16,7 @@ import org.robotlegs.core.IGuardedSignalCommandMap;
 import org.robotlegs.core.IInjector;
 import org.robotlegs.core.IReflector;
 
-public class SignalStateMachinePayLoadInjectionTests implements IPayloadReporter {
+public class SignalStateMachineCommandPayLoadInjectionTests implements IPayloadReporter {
 
 
     private var injector:IInjector;
@@ -98,7 +98,6 @@ public class SignalStateMachinePayLoadInjectionTests implements IPayloadReporter
     }
 
     [Test(expected="org.swiftsuspenders.InjectorError")]
-
     public function tearDown_has_no_payloads():void {
         addClasses();
         injectFSM();
