@@ -178,7 +178,7 @@ public class SignalXMLStateDecoder extends BaseXMLStateDecoder {
         if (!cancelled.isNull)
             mapSignalCommand(signalState.cancelled, cancelled);
 
-        if (errors.length > 0)throw new ClassRegistrationError(errors.toString());
+        if (errors.length > 0)throw new ClassRegistrationError( ClassRegistrationError.COMMAND_CLASS_NOT_REGISTERED + errors.toString());
     }
 
     /**
