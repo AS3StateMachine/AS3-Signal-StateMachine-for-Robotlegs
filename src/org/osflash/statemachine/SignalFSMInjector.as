@@ -5,7 +5,8 @@ package org.osflash.statemachine {
 	import org.osflash.statemachine.core.IStateMachine;
 	import org.osflash.statemachine.decoding.SignalXMLStateDecoder;
 	import org.osflash.statemachine.transitioning.SignalTransitionController;
-	import org.robotlegs.core.IInjector;
+import org.robotlegs.core.IGuardedSignalCommandMap;
+import org.robotlegs.core.IInjector;
 	import org.robotlegs.core.ISignalCommandMap;
 
 	/**
@@ -27,7 +28,7 @@ package org.osflash.statemachine {
 		/**
 		 * @private
 		 */
-		private var _signalCommandMap:ISignalCommandMap;
+		private var _signalCommandMap:IGuardedSignalCommandMap;
 
 		/**
 		 * @private
@@ -50,7 +51,7 @@ package org.osflash.statemachine {
 		 * @param signalCommandMap the ISignalCommandMap in which the commands will be mapped
 		 * to each states' Signals
 		 */
-		public function SignalFSMInjector( injector:IInjector, signalCommandMap:ISignalCommandMap ){
+		public function SignalFSMInjector( injector:IInjector, signalCommandMap:IGuardedSignalCommandMap ){
 			_injector = injector;
 			_signalCommandMap = signalCommandMap;
 		}
