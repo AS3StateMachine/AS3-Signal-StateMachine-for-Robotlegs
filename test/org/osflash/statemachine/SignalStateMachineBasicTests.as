@@ -11,9 +11,11 @@ import org.robotlegs.base.GuardedSignalCommandMap;
 import org.robotlegs.core.IGuardedSignalCommandMap;
 import org.robotlegs.core.IInjector;
 import org.robotlegs.core.IReflector;
-
+///////////////////////////////////////////////////////////////////////////
+// Here were are testing the behaviour of the StateMachine without any
+// mapping of commands
+///////////////////////////////////////////////////////////////////////////
 public class SignalStateMachineBasicTests {
-
 
     private var injector:IInjector;
     private var reflector:IReflector;
@@ -64,7 +66,6 @@ public class SignalStateMachineBasicTests {
         Assert.assertTrue("SECOND state should be injected", injector.hasMapping(ISignalState, SECOND));
         Assert.assertTrue("THIRD state should be injected", injector.hasMapping(ISignalState, THIRD));
     }
-    ////////////////////////////////////////////////////////////////////////////////////////////////
 
     [Test]
     public function SECOND_state_should_lazily_instantiate_cancellation_signal():void {

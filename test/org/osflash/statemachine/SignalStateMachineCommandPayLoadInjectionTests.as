@@ -16,6 +16,10 @@ import org.robotlegs.core.IGuardedSignalCommandMap;
 import org.robotlegs.core.IInjector;
 import org.robotlegs.core.IReflector;
 
+///////////////////////////////////////////////////////////////////////////
+// Here were are testing the injection of values from the phase signals
+// in to the commands
+///////////////////////////////////////////////////////////////////////////
 public class SignalStateMachineCommandPayLoadInjectionTests implements IPayloadReporter {
 
 
@@ -50,7 +54,11 @@ public class SignalStateMachineCommandPayLoadInjectionTests implements IPayloadR
 
 
     [Test]
-    public function FIRST_state_entered_command_payload_should_be_injected():void {
+    ///////////////////////////////////////////////////////////////////////////
+    // Here were are testing the injection of values from the entered phase
+    // signal into a single command
+    ///////////////////////////////////////////////////////////////////////////
+    public function FIRST_state_entered_command_payload_should_be_injected_into_single_command():void {
         addClasses();
         injectFSM();
         var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
@@ -61,7 +69,11 @@ public class SignalStateMachineCommandPayLoadInjectionTests implements IPayloadR
     }
 
     [Test]
-    public function SECOND_state_entered_command_payload_should_be_injected():void {
+    ///////////////////////////////////////////////////////////////////////////
+    // Here were are testing the injection of values from the entered phase
+    // signal into multiple commands
+    ///////////////////////////////////////////////////////////////////////////
+    public function SECOND_state_entered_command_payload_should_be_injected_into_multiple_commands():void {
         addClasses();
         injectFSM();
         var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
@@ -72,6 +84,11 @@ public class SignalStateMachineCommandPayLoadInjectionTests implements IPayloadR
     }
 
     [Test]
+    ///////////////////////////////////////////////////////////////////////////
+    // Here were are testing the injection of values from the phase signals
+    // of a straight transition. Note that the tearDown phase has no
+    // injections, so we are not testing it here (see InjectionError below)
+    ///////////////////////////////////////////////////////////////////////////
     public function all_FOURTH_state_command_payloads_should_be_injected_tearDown_has_no_injections():void {
         addClasses();
         injectFSM();
@@ -85,6 +102,10 @@ public class SignalStateMachineCommandPayLoadInjectionTests implements IPayloadR
     }
 
     [Test]
+     ///////////////////////////////////////////////////////////////////////////
+    // Here were are testing the injection of values from the phase signals
+    // of a cancelled transition.
+    ///////////////////////////////////////////////////////////////////////////
     public function FIFTH_state_command_payloads_should_be_injected():void {
         addClasses();
         injectFSM();
@@ -98,6 +119,10 @@ public class SignalStateMachineCommandPayLoadInjectionTests implements IPayloadR
     }
 
     [Test(expected="org.swiftsuspenders.InjectorError")]
+    ///////////////////////////////////////////////////////////////////////////
+    // Here were are testing that attempted injection of values from a tearDown
+    // phase signal throws an injection error
+    ///////////////////////////////////////////////////////////////////////////
     public function tearDown_has_no_payloads():void {
         addClasses();
         injectFSM();
@@ -145,7 +170,6 @@ public class SignalStateMachineCommandPayLoadInjectionTests implements IPayloadR
     private static const FIFTH:String = "fifth";
     private static const SIXTH:String = "sixth";
     private static const EMPTY:String = "empty";
-
 
     private static const TO_FIRST:String = "toFirst";
     private static const TO_SECOND:String = "toSecond";

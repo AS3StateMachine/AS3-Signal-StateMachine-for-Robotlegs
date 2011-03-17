@@ -15,8 +15,11 @@ import org.robotlegs.core.IGuardedSignalCommandMap;
 import org.robotlegs.core.IInjector;
 import org.robotlegs.core.IReflector;
 
+///////////////////////////////////////////////////////////////////////////
+// Here were are testing that the commands are mapped to the correct
+// signals independently of their execution
+///////////////////////////////////////////////////////////////////////////
 public class SignalStateMachineSignalCommandMappingTests {
-
 
     private var injector:IInjector;
     private var reflector:IReflector;
