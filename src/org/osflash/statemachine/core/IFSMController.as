@@ -10,7 +10,7 @@ package org.osflash.statemachine.core {
 		function get currentStateName():String;
 
 		/**
-		 * The name of the referring action.
+		 * The name of the action that referred the StateMachine to its current State.
 		 */
 		function get referringAction():String;
 
