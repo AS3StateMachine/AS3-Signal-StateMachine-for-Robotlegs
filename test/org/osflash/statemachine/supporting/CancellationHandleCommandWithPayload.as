@@ -1,11 +1,13 @@
 package org.osflash.statemachine.supporting{
+import org.osflash.statemachine.core.IPayload;
+
 public class CancellationHandleCommandWithPayload {
 
     [Inject]
     public var reporter:IPayloadReporter;
 
     [Inject]
-    public var payload:Object;
+    public var payload:IPayload;
 
     [Inject]
     public var reason:String;

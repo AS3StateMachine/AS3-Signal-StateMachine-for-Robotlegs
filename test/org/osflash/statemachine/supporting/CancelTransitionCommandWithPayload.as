@@ -1,5 +1,6 @@
 package org.osflash.statemachine.supporting {
 import org.osflash.statemachine.core.IFSMController;
+import org.osflash.statemachine.core.IPayload;
 
 public class CancelTransitionCommandWithPayload {
 
@@ -10,7 +11,7 @@ public class CancelTransitionCommandWithPayload {
 
 
     [Inject]
-    public var payload:Object;
+    public var payload:IPayload;
 
     [Inject]
     public var fsmController:IFSMController;

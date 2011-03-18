@@ -1,6 +1,7 @@
 package org.osflash.statemachine {
 import org.flexunit.Assert;
 import org.osflash.statemachine.core.IFSMController;
+import org.osflash.statemachine.core.IPayload;
 import org.osflash.statemachine.logging.TraceLogger;
 import org.osflash.statemachine.supporting.CancelTransitionCommandWithPayload;
 import org.osflash.statemachine.supporting.CancellationHandleCommandWithPayload;
@@ -132,8 +133,8 @@ public class SignalStateMachineCommandPayLoadInjectionTests implements IPayloadR
         fsmController.action(TO_EMPTY, payload);
     }
 
-    public function reportPayload(payload:Object):void {
-        reportedPayloads.push(payload)
+    public function reportPayload(payload:IPayload):void {
+        reportedPayloads.push(payload.body)
     }
 
     public function reportReason(reason:String):void {

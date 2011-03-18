@@ -1,4 +1,5 @@
 package org.osflash.statemachine.supporting{
+import org.osflash.statemachine.core.IPayload;
 
 public class SampleCommandDWithPayload{
 		
@@ -6,11 +7,11 @@ public class SampleCommandDWithPayload{
 		public var reporter:IPayloadReporter;
 
         [Inject]
-		public var payload:Object;
+		public var payload:IPayload;
 		
 		public function execute():void
 		{
-            reporter.reportPayload( payload );
+            reporter.reportPayload(payload);
 		}
 		
 	}
