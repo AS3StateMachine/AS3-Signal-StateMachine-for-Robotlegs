@@ -2,12 +2,14 @@ package org.osflash.statemachine.base {
 	import org.osflash.signals.Signal;
 	import org.osflash.statemachine.core.IFSMController;
 	import org.osflash.statemachine.core.IFSMControllerOwner;
-	import org.osflash.statemachine.core.IState;
+import org.osflash.statemachine.core.IPayload;
+import org.osflash.statemachine.core.IState;
 	import org.osflash.statemachine.errors.StateTransitionError;
 	import org.osflash.statemachine.signals.Action;
 	import org.osflash.statemachine.signals.Cancel;
 	import org.osflash.statemachine.signals.Changed;
 	import org.osflash.statemachine.core.ITransitionPhase;
+import org.osflash.statemachine.transitioning.Payload;
 import org.osflash.statemachine.transitioning.TransitionPhase;
 
 /**
@@ -64,7 +66,7 @@ import org.osflash.statemachine.transitioning.TransitionPhase;
 		/**
 		 * @private
 		 */
-		private var _cachePayload:Object;
+		private var _cachePayload:IPayload;
 
 		/**
 		 * @private
@@ -138,7 +140,8 @@ import org.osflash.statemachine.transitioning.TransitionPhase;
 		/**
 		 * @private
 		 */
-		private function instigateAction( actionName:String, payload:Object = null ):void{
+		private function instigateAction( actionName:String, payloadBody:Object = null ):void{
+            var  payload:IPayload = wrapPayload( payloadBody );
 			if( isTransitioning ){
 				_cacheActionName = actionName;
 				_cachePayload = payload;
@@ -167,7 +170,9 @@ import org.osflash.statemachine.transitioning.TransitionPhase;
 		 * @throws org.osflash.statemachine.errors.StateTransitionError Thrown if a transition is cancelled from a transition phase
 		 * other than an enteringGuard or exitingGuard.
 		 */
-		public function cancel( reason:String, payload:Object = null ):void{
+		public function cancel( reason:String, payloadBody:Object = null ):void{
+
+            var payload:IPayload = wrapPayload( payloadBody );
 
 			var isLegal:Boolean =
                     ( _transitionPhase == TransitionPhase.ENTERING_GUARD ||
@@ -179,6 +184,11 @@ import org.osflash.statemachine.transitioning.TransitionPhase;
 				throw new StateTransitionError( ILLEGAL_CANCEL_ERROR );
 
 		}
+
+    private function wrapPayload(body:Object):IPayload{
+       if( body is IPayload )return IPayload( body );
+        else return new Payload( body );
+    }
 
 		/**
 		 * @inheritDoc
