@@ -3,11 +3,11 @@ import org.osflash.signals.ISignal;
 import org.osflash.statemachine.base.BaseXMLStateDecoder;
 import org.osflash.statemachine.core.ISignalState;
 import org.osflash.statemachine.core.IState;
-import org.osflash.statemachine.errors.ClassRegistrationError;
+import org.osflash.statemachine.errors.StateDecodeError;
 import org.osflash.statemachine.states.SignalState;
+import org.osflash.statemachine.transitioning.TransitionPhase;
 import org.robotlegs.core.IGuardedSignalCommandMap;
 import org.robotlegs.core.IInjector;
-import org.robotlegs.core.ISignalCommandMap;
 
 /**
  * A StateDecoder is used by the FSMInjector to encapsulate the decoding of a
@@ -22,6 +22,9 @@ import org.robotlegs.core.ISignalCommandMap;
  * @see org.osflash.statemachine.states.SignalState
  */
 public class SignalXMLStateDecoder extends BaseXMLStateDecoder {
+
+    public static const COMMAND_CLASS_NOT_REGISTERED:String = "These commands need to be added to the StateDecoder: ";
+    public static const COMMAND_CLASS_CAN_BE_MAPPED_ONCE_ONLY_TO_SAME_SIGNAL:String = "A command class can be mapped once only to the same signal: ";
 
     /**
      * @private
@@ -157,11 +160,11 @@ public class SignalXMLStateDecoder extends BaseXMLStateDecoder {
      */
     protected function mapSignals(signalState:ISignalState, stateDef:Object):void {
 
-        var entered:PhaseDecoder = new PhaseDecoder(stateDef.entered);
-        var enteringGuard:PhaseDecoder = new PhaseDecoder(stateDef.enteringGuard);
-        var exitingGuard:PhaseDecoder = new PhaseDecoder(stateDef.exitingGuard);
-        var tearDown:PhaseDecoder = new PhaseDecoder(stateDef.tearDown);
-        var cancelled:PhaseDecoder = new PhaseDecoder(stateDef.cancelled);
+        var entered:PhaseDecoder = new PhaseDecoder(TransitionPhase.ENTERED, stateDef.entered);
+        var enteringGuard:PhaseDecoder = new PhaseDecoder(TransitionPhase.ENTERING_GUARD, stateDef.enteringGuard);
+        var exitingGuard:PhaseDecoder = new PhaseDecoder(TransitionPhase.EXITING_GUARD, stateDef.exitingGuard);
+        var tearDown:PhaseDecoder = new PhaseDecoder(TransitionPhase.TEAR_DOWN, stateDef.tearDown);
+        var cancelled:PhaseDecoder = new PhaseDecoder(TransitionPhase.CANCELLED, stateDef.cancelled);
 
         if (!entered.isNull)
             mapSignalCommand(signalState.entered, entered);
@@ -178,7 +181,7 @@ public class SignalXMLStateDecoder extends BaseXMLStateDecoder {
         if (!cancelled.isNull)
             mapSignalCommand(signalState.cancelled, cancelled);
 
-        if (errors.length > 0)throw new ClassRegistrationError( ClassRegistrationError.COMMAND_CLASS_NOT_REGISTERED + errors.toString());
+        if (errors.length > 0)throw new StateDecodeError(COMMAND_CLASS_NOT_REGISTERED + errors.toString());
     }
 
     /**
@@ -187,7 +190,9 @@ public class SignalXMLStateDecoder extends BaseXMLStateDecoder {
 
     private function mapSignalCommand(signal:ISignal, phaseDecoder:PhaseDecoder):void {
         for each (var item:PhaseDecoderItem in phaseDecoder.decodedItems) {
-            if (item.guards == null) {
+            if (item.isError)
+                throw new StateDecodeError(item.error);
+            else if (item.guardCommandClassNames == null) {
                 var commandClass:Class = getAndValidateClass(item.commandClassName);
                 if (commandClass != null && doesNotHaveMapping(signal, commandClass))
                     signalCommandMap.mapSignal(signal, commandClass);
@@ -200,21 +205,27 @@ public class SignalXMLStateDecoder extends BaseXMLStateDecoder {
 
     private function mapGuardedSignalCommand(signal:ISignal, item:PhaseDecoderItem):void {
         var guardClasses:Array = [];
-        var commandClass:Class = getAndValidateClass(item.commandClassName);
-        for each (var guardClassName:String in item.guards) {
+        var commandClass:Class = getAndValidateClass( item.commandClassName );
+        var fallBackCommandClass:Class = ( item.hasFallback ) ? getAndValidateClass(item.fallbackCommandClassName) : null;
+
+        for each (var guardClassName:String in item.guardCommandClassNames) {
             var g:Class = getAndValidateClass(guardClassName);
             if (g != null)guardClasses.push(g);
         }
-        if (guardClasses.length == item.guards.length &&
-                commandClass != null &&
-                doesNotHaveMapping(signal, commandClass))
+
+        if (    guardClasses.length != item.guardCommandClassNames.length ||
+                commandClass == null ||
+                !doesNotHaveMapping(signal, commandClass)) return;
+
+        if(fallBackCommandClass == null )
             signalCommandMap.mapGuardedSignal(signal, commandClass, guardClasses);
+        else
+            signalCommandMap.mapGuardedSignalWithFallback( signal, commandClass, fallBackCommandClass, guardClasses);
     }
 
     private function doesNotHaveMapping(signal:ISignal, commandClass:Class):Boolean {
-
         if (signalCommandMap.hasSignalCommand(signal, commandClass))
-            throw new ClassRegistrationError(ClassRegistrationError.COMMAND_CLASS_CAN_BE_MAPPED_ONCE_ONLY_TO_SAME_SIGNAL);
+            throw new StateDecodeError(COMMAND_CLASS_CAN_BE_MAPPED_ONCE_ONLY_TO_SAME_SIGNAL);
         return true;
     }
 
@@ -231,6 +242,8 @@ public class SignalXMLStateDecoder extends BaseXMLStateDecoder {
 import flash.utils.describeType;
 
 import org.osflash.statemachine.core.IClassBag;
+import org.osflash.statemachine.core.ITransitionPhase;
+import org.osflash.statemachine.transitioning.TransitionPhase;
 
 /**
  * Wrapper class for a Class reference.
@@ -312,21 +325,27 @@ internal class ClassBag implements IClassBag {
 internal class PhaseDecoder {
 
     internal var decodedItems:Array;
+    private var _phase:ITransitionPhase;
 
-    public function PhaseDecoder(phase:XMLList):void {
-        decode(phase);
+    public function PhaseDecoder(phase:ITransitionPhase, phaseDef:XMLList):void {
+        _phase = phase;
+        decode(phaseDef);
     }
 
     public function get isNull():Boolean {
         return (decodedItems == null || decodedItems.length == 0);
     }
 
-    private function decode(phase:XMLList):void {
-        if (phase.length() == 0)return;
+    private function decode(phaseDef:XMLList):void {
+        if (phaseDef.length() == 0)return;
         decodedItems = [];
-        var list:XMLList = phase.commandClass;
+        var list:XMLList = phaseDef.commandClass;
         for each (var xml:XML in list) {
-            var item:PhaseDecoderItem = new PhaseDecoderItem(xml.@classPath.toString(), decodeGuards(xml.guardClass.@classPath))
+            var item:PhaseDecoderItem = new PhaseDecoderItem();
+            item.phase = _phase;
+            item.commandClassName = xml.@classPath.toString();
+            item.fallbackCommandClassName = xml.@fallback.toString();
+            item.guardCommandClassNames = decodeGuards(xml.guardClass.@classPath);
             decodedItems.push(item);
         }
     }
@@ -343,11 +362,20 @@ internal class PhaseDecoder {
 }
 
 internal class PhaseDecoderItem {
+    private static const ILLEGAL_FALLBACK_COMMAND_DECLARATION:String = "Fallback commands can not be declared for this transition phase: ";
     internal var commandClassName:String;
-    internal var guards:Array;
+    internal var fallbackCommandClassName:String;
+    internal var guardCommandClassNames:Array;
+    internal var phase:ITransitionPhase;
+    internal var error:String;
 
-    public function PhaseDecoderItem(command:String, guards:Array):void {
-        this.commandClassName = command;
-        this.guards = guards;
+    public function get isError():Boolean {
+        if( TransitionPhase.ENTERED.equals(phase) || TransitionPhase.TEAR_DOWN.equals(phase) ) return false;
+        if( hasFallback ) error = ILLEGAL_FALLBACK_COMMAND_DECLARATION;
+        return hasFallback;
+    }
+
+    public function get hasFallback():Boolean {
+        return ( fallbackCommandClassName != null ) && ( fallbackCommandClassName != "" );
     }
 }
