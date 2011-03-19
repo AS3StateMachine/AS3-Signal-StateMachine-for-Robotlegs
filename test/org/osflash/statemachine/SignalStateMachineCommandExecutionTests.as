@@ -79,7 +79,7 @@ public class SignalStateMachineCommandExecutionTests implements ICommandReporter
         Assert.assertWithApply(assertArraysEqual, [expected, reportedCommands]);
     }
 
-    [Test(expected="org.osflash.statemachine.errors.ClassRegistrationError")]
+    [Test(expected="org.osflash.statemachine.errors.StateDecodeError")]
     public function duplication_of_command_mapped_to_same_signal():void {
         fsmInjector.initiate(FSM_2);
         addClasses();

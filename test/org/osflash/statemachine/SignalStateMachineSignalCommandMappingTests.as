@@ -54,7 +54,7 @@ public class SignalStateMachineSignalCommandMappingTests {
         Assert.assertTrue(state.hasEntered);
     }
 
-    [Test(expected="org.osflash.statemachine.errors.ClassRegistrationError")]
+    [Test(expected="org.osflash.statemachine.errors.StateDecodeError")]
      public function SampleCommandA_not_added_to_fsmInjector():void {
      injectFSM();
      }
@@ -131,7 +131,7 @@ public class SignalStateMachineSignalCommandMappingTests {
      Assert.assertTrue(state.hasCancelled);
      }
 
-     [Test(expected="org.osflash.statemachine.errors.ClassRegistrationError")]
+     [Test(expected="org.osflash.statemachine.errors.StateDecodeError")]
      public function Guards_not_added_to_fsmInjector():void {
      fsmInjector.addClass(SampleCommandA);
      fsmInjector.addClass(SampleCommandB);
