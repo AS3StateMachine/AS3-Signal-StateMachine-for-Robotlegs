@@ -27,6 +27,10 @@ public class TransitionPhase implements ITransitionPhase {
     public function get index():int {
         return _index;
     }
+
+    public function equals(value:Object):Boolean {
+        return (value === this) || (value == name) || (value == index);
+    }
 }
 
 
