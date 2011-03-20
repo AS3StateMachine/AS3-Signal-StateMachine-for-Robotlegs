@@ -1,5 +1,13 @@
 h2. Change log
 
+h3. AS3-Signal-StateMachine-for-Robotlegs-V0-4-003: 17/20/2011
+
+* Upgraded signalCommandMap to include fallback command support
+  for GuardedSignalCommandMap in the entered on tearDown phases
+* Added Payload object to avoid passing and injection null objects
+* Removed the ClassRegistrationError now using StateDecodingError
+  from StateMachine-Base v1.3.004
+
 h3. AS3-Signal-StateMachine-for-Robotlegs-V0-4-000: 17/03/2011
 
 * Upgraded signalCommandMap v0.3 to v0.4 which includes the

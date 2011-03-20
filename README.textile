@@ -2,7 +2,7 @@ h2. AS3 Signal StateMachine for Robotlegs
 
 An Signal driven StateMachine utility with six transition phases:
 
-version 0.4.000
+version 0.4.003
 
 # *entering guard:* Allows for testing of conditions to assess whether it is permissible to enter the target state. If not, the transition can be cancelled.
 # *exiting guard:* The first state-specific phase, it allows for testing of conditions to assess whether it is permissible to leave the current state. If not, the transition can be cancelled.
@@ -18,7 +18,7 @@ h3. Documentation
 
 h3. Dependencies:
 
-* "StateMachine Base (v1.3.000):":http://github.com/AS3StateMachine/AS3-StateMachine-Base the base classes for this utility.
+* "StateMachine Base (v1.3.004):":http://github.com/AS3StateMachine/AS3-StateMachine-Base the base classes for this utility.
 * "AS3 Signals (v0.8):":https://github.com/robertpenner/as3-signals Robert Penner's AS3 Signals.
 * "Robotlegs (v1.4.0):":https://github.com/robotlegs/robotlegs-framework The Robotlegs framework.
 * "SignalCommandMap (v0.4):":https://github.com/joelhooks/signals-extensions-CommandSignal Joel Hooks' Robotlegs extention.
