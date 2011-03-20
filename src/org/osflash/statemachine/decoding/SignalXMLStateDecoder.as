@@ -362,6 +362,7 @@ internal class PhaseDecoder {
 }
 
 internal class PhaseDecoderItem {
+
     private static const ILLEGAL_FALLBACK_COMMAND_DECLARATION:String = "Fallback commands can not be declared for this transition phase: ";
     internal var commandClassName:String;
     internal var fallbackCommandClassName:String;
