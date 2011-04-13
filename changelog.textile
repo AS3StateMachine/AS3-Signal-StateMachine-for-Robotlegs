@@ -1,5 +1,9 @@
 h2. Change log
 
+h3. AS3-Signal-StateMachine-for-Robotlegs-V0-4-004: 17/20/2011
+
+* Allowed fallback command support in Cancelled Phase of transition
+
 h3. AS3-Signal-StateMachine-for-Robotlegs-V0-4-003: 17/20/2011
 
 * Upgraded signalCommandMap to include fallback command support
