@@ -127,8 +127,7 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
 
     [Test]
     ///////////////////////////////////////////////////////////////////////////
-    // We are testing that the phase signal is working for the cancelled
-    // phase signal. the CancellationHandleCommand should be executed
+    // The CancellationHandleCommand should be executed as it has a HappyGuard
     ///////////////////////////////////////////////////////////////////////////
     public function FIFTH_state_cancelled_signal_command_executed():void {
         setUp(FSM);
@@ -141,8 +140,8 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
 
     [Test]
     ///////////////////////////////////////////////////////////////////////////
-    // We are testing that the phase signal is working for the cancelled
-    // phase signal. the CancellationHandleCommand should not be executed
+    // The CancellationHandleCommand should not be executed  as it has a
+    // GrumpyGuard
     ///////////////////////////////////////////////////////////////////////////
     public function SIXTH_state_cancelled_signal_command_not_executed():void {
         setUp(FSM);
@@ -162,9 +161,25 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
         setUp(TESTING_FALLBACK_COMMANDS);
         var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
         var expected:Array = [SampleCommandC,SampleCommandF,SampleCommandF,SampleCommandD];
+        fsmController.action(TO_FIRST);
         fsmController.action(TO_EMPTY);
         Assert.assertWithApply(assertArraysEqual, [expected, reportedCommands])
     }
+
+    [Test]
+    ///////////////////////////////////////////////////////////////////////////
+    // We are testing that fallback commands are called in the cancelled
+    // phases when guards disapprove
+    ///////////////////////////////////////////////////////////////////////////
+    public function fallback_commands_for_cancellation_phase_should_execute_according_to_guards():void {
+        setUp(TESTING_FALLBACK_COMMANDS);
+        var fsmController:IFSMController = injector.getInstance(IFSMController) as IFSMController;
+        var expected:Array = [CancelTransitionCommand,SampleCommandC,SampleCommandF];
+        fsmController.action(TO_SECOND);
+        fsmController.action(TO_EMPTY);
+        Assert.assertWithApply(assertArraysEqual, [expected, reportedCommands])
+    }
+
 
     [Test(expected="org.osflash.statemachine.errors.StateDecodeError")]
     ///////////////////////////////////////////////////////////////////////////
@@ -177,23 +192,12 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
     }
 
     [Test(expected="org.osflash.statemachine.errors.StateDecodeError")]
-        ///////////////////////////////////////////////////////////////////////////
-        // We are testing that fallback declarations in exitingGuard phase throws
-        // StateDecodeError
-        ///////////////////////////////////////////////////////////////////////////
-        public function fallback_command_declared_in_exitingGuard_is_illegal():void {
-            setUp(TESTING_ENTERING_GUARD_FALLBACK_ERROR);
-
-        }
-
-
-[Test(expected="org.osflash.statemachine.errors.StateDecodeError")]
     ///////////////////////////////////////////////////////////////////////////
-    // We are testing that fallback declarations in cancelled phase throws
+    // We are testing that fallback declarations in exitingGuard phase throws
     // StateDecodeError
     ///////////////////////////////////////////////////////////////////////////
-    public function fallback_command_declared_in_cancelled_is_illegal():void {
-        setUp(TESTING_CANCELLED_FALLBACK_ERROR);
+    public function fallback_command_declared_in_exitingGuard_is_illegal():void {
+        setUp(TESTING_ENTERING_GUARD_FALLBACK_ERROR);
 
     }
 
@@ -395,21 +399,14 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
                 </state>
             </fsm>;
 
-    private var TESTING_CANCELLED_FALLBACK_ERROR:XML =
-            <fsm initial={STARTING}>
-                <state name={STARTING}>
-                    <enteringGuard>
-                        <commandClass classPath="SampleCommandC" fallback="SampleCommandF">
-                            <guardClass classPath="HappyGuard" />
-                            <guardClass classPath="HappyGuard" />
-                        </commandClass>
-                    </enteringGuard>
-                </state>
-            </fsm>;
 
     private var TESTING_FALLBACK_COMMANDS:XML =
             <fsm initial={STARTING}>
                 <state name={STARTING}>
+                    <transition action={TO_FIRST} target={FIRST}/>
+                    <transition action={TO_SECOND} target={SECOND}/>
+                </state>
+                <state name={FIRST}>
                     <entered>
                         <commandClass classPath="SampleCommandC" fallback="SampleCommandF">
                             <guardClass classPath="HappyGuard" />
@@ -429,10 +426,29 @@ public class SignalStateMachineGuardTests implements ICommandReporter {
                             <guardClass classPath="HappyGuard" />
                         </commandClass>
                     </tearDown>
+
                     <transition action={TO_EMPTY} target={EMPTY}/>
                 </state>
 
-                 <state name={EMPTY}/>
+                <state name={SECOND}>
+                    <cancelled>
+                        <commandClass classPath="SampleCommandC" fallback="SampleCommandF">
+                            <guardClass classPath="HappyGuard" />
+                            <guardClass classPath="HappyGuard" />
+                        </commandClass>
+                        <commandClass classPath="SampleCommandD" fallback="SampleCommandF">
+                            <guardClass classPath="GrumpyGuard" />
+                            <guardClass classPath="HappyGuard" />
+                        </commandClass>
+                    </cancelled>
+                    <exitingGuard>
+                        <commandClass classPath="CancelTransitionCommand"/>
+                    </exitingGuard>
+
+                    <transition action={TO_EMPTY} target={EMPTY}/>
+                </state>
+
+                <state name={EMPTY}/>
 
             </fsm>
 

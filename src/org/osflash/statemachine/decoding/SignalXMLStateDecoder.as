@@ -181,7 +181,8 @@ public class SignalXMLStateDecoder extends BaseXMLStateDecoder {
         if (!cancelled.isNull)
             mapSignalCommand(signalState.cancelled, cancelled);
 
-        if (errors.length > 0)throw new StateDecodeError(COMMAND_CLASS_NOT_REGISTERED + errors.toString());
+        if (errors.length > 0)
+            throw new StateDecodeError(COMMAND_CLASS_NOT_REGISTERED + errors.toString());
     }
 
     /**
@@ -371,7 +372,7 @@ internal class PhaseDecoderItem {
     internal var error:String;
 
     public function get isError():Boolean {
-        if( TransitionPhase.ENTERED.equals(phase) || TransitionPhase.TEAR_DOWN.equals(phase) ) return false;
+        if( TransitionPhase.ENTERED.equals(phase) || TransitionPhase.TEAR_DOWN.equals(phase) || TransitionPhase.CANCELLED.equals(phase) ) return false;
         if( hasFallback ) error = ILLEGAL_FALLBACK_COMMAND_DECLARATION;
         return hasFallback;
     }
